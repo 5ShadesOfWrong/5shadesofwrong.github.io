@@ -91,7 +91,12 @@
 	   filter. The SKY is hidden entirely — the perfect explainer's background
 	   is not highlighted, so there is no box, just wolf + moon + ground. */
 	.hero-backdrop {
-		z-index: 1; /* above the extended ground strip, below the text */
+		/* Above the extended ground strip AND above the text container's box.
+		   The container is a full-width block that overlaps the backdrop
+		   horizontally; with equal z-index it paints on top and its transparent
+		   box swallows clicks on the switcher buttons (user bug 2026-11-02).
+		   Raising the backdrop keeps the buttons fully clickable. */
+		z-index: 2;
 	}
 
 	.hero-backdrop .scene-figure {

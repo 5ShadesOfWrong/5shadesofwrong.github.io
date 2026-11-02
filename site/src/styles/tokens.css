@@ -126,6 +126,25 @@
 }
 
 /*
+ * Responsive content width — on larger screens the fixed 76rem cap leaves
+ * large empty gutters on both sides. Scale the content up in steps so the
+ * page keeps using the full viewport (user review 2026-11-02). The nav rail
+ * reserves its own column via .container's padding-right, so the content
+ * grows without colliding with it.
+ */
+@media (min-width: 1600px) {
+	:root {
+		--content-width: 88rem;
+	}
+}
+
+@media (min-width: 1920px) {
+	:root {
+		--content-width: 100rem;
+	}
+}
+
+/*
  * Presenter mode — activated by `data-presenter` on <html> (presenter.ts).
  * Enlarges type & spacing for projection (DESIGN_PLAN §4).
  */

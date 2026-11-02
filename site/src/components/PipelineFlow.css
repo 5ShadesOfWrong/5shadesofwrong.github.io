@@ -8,6 +8,14 @@
 		align-items: center;
 	}
 
+	/* On large screens the wider container lets the callout boxes grow too
+	   (user review 2026-11-02). */
+	@media (min-width: 1600px) {
+		.flow {
+			grid-template-columns: minmax(16rem, 22rem) 1fr minmax(16rem, 22rem);
+		}
+	}
+
 	/* Notebook widths: the fixed 14–17rem callouts + 9rem arrows overflow
 	   under the nav rail (user bug report 2026-10-29). Let the callouts
 	   shrink and tighten the arrows so the row always fits. */

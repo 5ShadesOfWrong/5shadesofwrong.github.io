@@ -35,7 +35,9 @@
 	/* ---- Viewer shell ---- */
 	.viewer {
 		margin-top: var(--space-8);
-		max-width: 72rem; /* wider shell → bigger example boxes (user review 2026-10-28) */
+		/* Full container width — the shell grows with the responsive
+		   --content-width on large screens (user review 2026-11-02). */
+		width: 100%;
 	}
 
 	/*
@@ -99,6 +101,15 @@
 		grid-template-rows: auto auto;
 		gap: var(--space-4);
 		align-items: start;
+	}
+
+	/* On large screens the wider container lets the three scene panels grow
+	   too (not just the arrow gutters), so the examples use the extra space
+	   (user review 2026-11-02). */
+	@media (min-width: 1600px) {
+		.body {
+			grid-template-columns: minmax(13rem, 18rem) 1fr minmax(13rem, 18rem) 1fr minmax(13rem, 18rem);
+		}
 	}
 
 	/* Arrows between the panels, pointing at the center (Explanation) —
@@ -392,6 +403,13 @@
 		display: grid;
 		grid-template-columns: minmax(11rem, 14rem) 1fr minmax(11rem, 14rem) 1fr minmax(11rem, 14rem);
 		gap: var(--space-4);
+	}
+
+	/* Match the .body panel growth on large screens (user review 2026-11-02). */
+	@media (min-width: 1600px) {
+		.facts {
+			grid-template-columns: minmax(13rem, 18rem) 1fr minmax(13rem, 18rem) 1fr minmax(13rem, 18rem);
+		}
 	}
 
 	.fact {

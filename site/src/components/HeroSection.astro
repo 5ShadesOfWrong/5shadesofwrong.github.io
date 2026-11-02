@@ -52,7 +52,11 @@ const steps = [
 			<p class="lede" data-reveal data-reveal-delay="2">Three lenses to tell when an AI explanation is wrong — and which kind of wrong it is.</p>
 		</div>
 
-		<div class="hero-visual" data-reveal data-reveal-delay="3">
+		<div class="hero-visual">
+			{/* The scheme is constructed progressively as the user scrolls:
+			   each callout/node carries its own data-reveal (see PipelineFlow),
+			   so box 0 → box 1 → the central scheme appear in sequence
+			   (user review 2026-11-02). */}
 			<PipelineFlow />
 		</div>
 	</div>
