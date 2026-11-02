@@ -1,9 +1,9 @@
 ---
 import './ArchetypeViewer.css';
 import archetypes from '../data/archetypes.json';
-import lenses from '../data/lenses.json';
+import dimensions from '../data/dimensions.json';
 import Term from './Term.astro';
-import type { Archetype, ArchetypesData, LensesData } from '../schemas/schemas';
+import type { Archetype, ArchetypesData, DimensionsData } from '../schemas/schemas';
 
 /**
  * ArchetypeViewer.astro — §3 The 5(0) Shades of Wrong (v3, user review 2026-10-21)
@@ -36,21 +36,21 @@ const data = archetypes as unknown as ArchetypesData;
 const list = data.archetypes.filter((a) => a.id !== 'perfect-explainer');
 const legend = data.legend;
 
-// Term → concise definition (from lenses.json tooltips) for the verdict chips.
+// Term → concise definition (from dimensions.json tooltips) for the verdict chips.
 // Each term has a positive variant (green) and a negated variant (red) so the
 // tooltip always matches the verdict shown (user review 2026-10-26).
-const lensList = (lenses as unknown as LensesData).lenses;
+const dimensionList = (dimensions as unknown as DimensionsData).dimensions;
 const termTips: Record<string, { ok: string; bad: string }> = {
 	Coherent: {
-		ok: lensList.find((l) => l.id === 'coherence')?.tooltip ?? '',
+		ok: dimensionList.find((d) => d.id === 'coherence')?.tooltip ?? '',
 		bad: 'The explanation contradicts itself — its internal logic does not hold.',
 	},
 	Valid: {
-		ok: lensList.find((l) => l.id === 'validity')?.tooltip ?? '',
+		ok: dimensionList.find((d) => d.id === 'validity')?.tooltip ?? '',
 		bad: 'The explanation does not match the real-world facts — it misrepresents what is actually true.',
 	},
 	Faithful: {
-		ok: lensList.find((l) => l.id === 'faithfulness')?.tooltip ?? '',
+		ok: dimensionList.find((d) => d.id === 'faithfulness')?.tooltip ?? '',
 		bad: 'The explanation does not reflect how the model actually processed the input.',
 	},
 };
@@ -131,7 +131,7 @@ const GROUND_PATH = 'M0 152 Q 60 138 120 150 T 240 146 L 240 200 L 0 200 Z';
 	<div class="container">
 		<h2 id="archetypes-title" data-reveal>The 5 Shades of Wrong</h2>
 		<p class="intro" data-reveal data-reveal-delay="1">
-		Combining the three lenses yields the 5 Shades of Wrong — five ways
+		Combining the three dimensions yields the 5 Shades of Wrong — five ways
 		an explanation can be wrong. Step through them one at a time.
 		</p>
 
@@ -330,7 +330,7 @@ const GROUND_PATH = 'M0 152 Q 60 138 120 150 T 240 146 L 240 200 L 0 200 Z';
 
 									// Arrows between the panels, pointing toward the center
 									// (Explanation) — same geometry as the §2 scheme arrows.
-									// Each arrow carries its lens verdict below, exactly where
+									// Each arrow carries its dimension verdict below, exactly where
 									// the paper puts its stickers: Validity on the Ground-Truth
 									// arrow, Faithfulness on the Prediction arrow.
 									if (i === 2) return [figure];

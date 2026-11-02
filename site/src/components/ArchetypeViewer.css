@@ -142,7 +142,7 @@
 
 	/* Arrows between the panels, pointing at the center (Explanation) —
 	   same geometry as the §2 scheme arrows (PipelineFlow). Each arrow
-	   carries its lens verdict chip below: Validity on the Ground-Truth
+	   carries its dimension verdict chip below: Validity on the Ground-Truth
 	   arrow, Faithfulness on the Prediction arrow (paper sticker spots). */
 	.flow-arrow {
 		align-self: center;

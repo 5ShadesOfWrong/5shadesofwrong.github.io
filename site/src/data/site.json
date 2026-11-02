@@ -21,7 +21,7 @@
   "license": "CC BY 4.0",
   "bibtex": "@misc{shadesofwrong2026,\n  title     = {5(0) Shades of Wrong: Toward a Common Language for \"Wrong\" AI Explanations},\n  author    = {Anonymous},\n  year      = {2026},\n  note      = {Companion site: 5 Shades of Wrong}\n}",
   "tagline": {
-    "reader": "Scroll to learn: three lenses, six archetypes, thirteen scenarios.",
+    "reader": "Scroll to learn: three dimensions, six archetypes, thirteen scenarios.",
     "presenter": "Present live: click-to-reveal cards, projection-ready sections."
   }
 }

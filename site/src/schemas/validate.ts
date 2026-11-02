@@ -3,7 +3,7 @@
  * -----------------------------------------------------------
  * Checks every src/data/*.json against its schema (schemas.ts) and fails the
  * build with a precise message if anything drifts: missing fields, wrong
- * types, unknown lens ids, duplicate scenario ids, or an archetype reference
+ * types, unknown dimension ids, duplicate scenario ids, or an archetype reference
  * that doesn't exist.
  *
  * Run manually:   npx tsx src/schemas/validate.ts
@@ -17,7 +17,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type {
 	ArchetypesData,
-	LensesData,
+	DimensionsData,
 	ScenarioSetData,
 	SiteData,
 	WorkflowData,
@@ -74,38 +74,38 @@ function validateSite(data: Json): data is SiteData {
 	return failures === 0;
 }
 
-/* ---------------- lenses.json ---------------- */
+/* ---------------- dimensions.json ---------------- */
 
-const LENS_IDS = ['coherence', 'validity', 'faithfulness'] as const;
+const DIMENSION_IDS = ['coherence', 'validity', 'faithfulness'] as const;
 
-function validateLenses(data: Json): data is LensesData {
-	const file = 'lenses.json';
-	const d = data as { lenses?: unknown; positiveBaseline?: unknown };
+function validateDimensions(data: Json): data is DimensionsData {
+	const file = 'dimensions.json';
+	const d = data as { dimensions?: unknown; positiveBaseline?: unknown };
 	const pb = d.positiveBaseline as Record<string, unknown> | undefined;
 	if (!pb || !isStr(pb.title) || !isStr(pb.explanation) || !isStr(pb.context)) {
 		fail(file, 'positiveBaseline needs title/explanation/context strings');
 	}
-	if (!Array.isArray(d.lenses) || d.lenses.length !== 3) {
-		fail(file, 'must contain exactly 3 lenses');
+	if (!Array.isArray(d.dimensions) || d.dimensions.length !== 3) {
+		fail(file, 'must contain exactly 3 dimensions');
 		return false;
 	}
 	const ids = new Set<string>();
-	for (const lens of d.lenses as Record<string, unknown>[]) {
-		checkStrs(file, lens, ['id', 'name', 'relationship', 'definition', 'baselineWhy', 'footnote']);
-		if (!LENS_IDS.includes(lens.id as never)) fail(file, `unknown lens id "${lens.id}"`);
-		ids.add(String(lens.id));
-		if (!Array.isArray(lens.facets) || lens.facets.length === 0) {
-			fail(file, `lens "${lens.id}" must list facets`);
+	for (const dimension of d.dimensions as Record<string, unknown>[]) {
+		checkStrs(file, dimension, ['id', 'name', 'relationship', 'definition', 'baselineWhy', 'footnote']);
+		if (!DIMENSION_IDS.includes(dimension.id as never)) fail(file, `unknown dimension id "${dimension.id}"`);
+		ids.add(String(dimension.id));
+		if (!Array.isArray(dimension.facets) || dimension.facets.length === 0) {
+			fail(file, `dimension "${dimension.id}" must list facets`);
 		}
 		for (const ex of ['goodExample', 'flawedExample'] as const) {
-			const e = lens[ex] as Record<string, unknown> | undefined;
+			const e = dimension[ex] as Record<string, unknown> | undefined;
 			if (!e || !isStr(e.setup) || !isStr(e.explanation) || !isStr(e.why)) {
-				fail(file, `lens "${lens.id}" ${ex} needs setup/explanation/why strings`);
+				fail(file, `dimension "${dimension.id}" ${ex} needs setup/explanation/why strings`);
 			}
 		}
 	}
-	if (ids.size !== 3) fail(file, 'lens ids must be unique');
-	if (failures === 0) ok(file, '3 lenses valid');
+	if (ids.size !== 3) fail(file, 'dimension ids must be unique');
+	if (failures === 0) ok(file, '3 dimensions valid');
 	return failures === 0;
 }
 
@@ -161,8 +161,8 @@ function validateWorkflow(data: Json): data is WorkflowData {
 		numbers.add(s.number as number);
 		checkStrs(file, s, ['title', 'question']);
 		if (!isStrArray(s.details)) fail(file, `step ${s.number} details must be string[]`);
-		if (s.lens !== undefined && !LENS_IDS.includes(s.lens as never)) {
-			fail(file, `step ${s.number} has unknown lens "${s.lens}"`);
+		if (s.dimension !== undefined && !DIMENSION_IDS.includes(s.dimension as never)) {
+			fail(file, `step ${s.number} has unknown dimension "${s.dimension}"`);
 		}
 	}
 	if (numbers.size !== 4) fail(file, 'step numbers must be unique 0–3');
@@ -213,7 +213,7 @@ function validateScenarioSet(data: Json, file: string): data is ScenarioSetData 
 function main(): boolean {
 	console.log('Validating data files against schemas…\n');
 	validateSite(load('site.json'));
-	validateLenses(load('lenses.json'));
+	validateDimensions(load('dimensions.json'));
 	validateArchetypes(load('archetypes.json'));
 	validateWorkflow(load('workflow.json'));
 	validateScenarioSet(load('scenarios.banking.json'), 'scenarios.banking.json');

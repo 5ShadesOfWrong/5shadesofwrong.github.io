@@ -8,11 +8,11 @@
  * color means two different things at once:
  *
  *   Axis A — the three wrongness DIMENSIONS (fixed identity everywhere a
- *            dimension is referenced: lens cards, pipeline highlights,
+ *            dimension is referenced: dimension cards, pipeline highlights,
  *            assessment steps). See --dim-coherence/validity/faithfulness.
  *   Axis B — VERDICT (correct/honest vs. wrong/misleading). See
  *            --color-positive/--color-negative. Kept separate from Axis A
- *            so "unfaithful" (a lens) is never confused with "wrong" (a
+ *            so "unfaithful" (a dimension) is never confused with "wrong" (a
  *            verdict) by color alone.
  *   Axis C — structural ROLE (Ground Truth / Explanation / Prediction) and
  *            general brand accent. See --color-model (role/brand purple)
@@ -72,8 +72,8 @@
 
 	/* ---- Color: wrongness DIMENSIONS (Axis A) ----
 	 * Fixed, unique identity per dimension, used identically everywhere a
-	 * lens/dimension is referenced (PipelineDiagram, PipelineFlow,
-	 * AssessmentWorkflow, LensCard numbers). Canonicalizes ONE fixed
+	 * dimension is referenced (PipelineDiagram, PipelineFlow,
+	 * AssessmentWorkflow, DimensionCard numbers). Canonicalizes ONE fixed
 	 * mapping across components (user review 2026-10-29); faithfulness
 	 * keeps a dedicated blue since --color-link no longer carries one.
 	 */

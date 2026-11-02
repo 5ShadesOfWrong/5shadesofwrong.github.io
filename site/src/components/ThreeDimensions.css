@@ -1,4 +1,4 @@
-/* Styles for ThreeLenses.astro — extracted per review 2026-10-26 */
+/* Styles for ThreeDimensions.astro — extracted per review 2026-10-26 */
 
 	.intro {
 		margin-top: var(--space-4);
@@ -36,8 +36,8 @@
 		color: var(--color-text-faint);
 	}
 
-	/* ---- Three lens columns (the table's three dimensions) ---- */
-	.lens-cards {
+	/* ---- Three dimension columns (the table's three dimensions) ---- */
+	.dimension-cards {
 		margin-top: var(--space-6);
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -45,7 +45,7 @@
 		align-items: stretch;
 	}
 
-	.lens-col {
+	.dimension-col {
 		display: flex;
 		flex-direction: column;
 		background: var(--color-bg-raised);
@@ -55,19 +55,19 @@
 		scroll-margin-top: var(--space-8);
 	}
 
-	.lens-head {
+	.dimension-head {
 		display: flex;
 		align-items: baseline;
 		gap: var(--space-4);
 	}
 
-	.lens-number {
+	.dimension-number {
 		font-family: var(--font-mono);
 		font-size: var(--text-2xl);
 		color: var(--color-model);
 	}
 
-	.lens-col h3 {
+	.dimension-col h3 {
 		margin: 0;
 		font-size: var(--text-xl);
 	}
@@ -78,7 +78,7 @@
 		margin-top: var(--space-1);
 	}
 
-	/* Why the positive baseline holds under this lens (table row 2). */
+	/* Why the positive baseline holds under this dimension (table row 2). */
 	.baseline-why {
 		margin-top: var(--space-4);
 		font-size: var(--text-sm);
@@ -123,7 +123,7 @@
 	/* ---- Negative examples (collapsible, like the old facets) ---- */
 	.negatives {
 		/* Pushed to the bottom of the (now flex, stretch-height) card so the
-		   "More negative examples" toggle lines up across all three lenses,
+		   "More negative examples" toggle lines up across all three dimensions,
 		   regardless of how much baseline/example text sits above it (user
 		   review 2026-11-02). */
 		margin-top: auto;
@@ -160,7 +160,7 @@
 
 	/* ---- Mobile/tablet: stack ---- */
 	@media (max-width: 1000px) {
-		.lens-cards {
+		.dimension-cards {
 			grid-template-columns: 1fr;
 			max-width: 44rem;
 		}

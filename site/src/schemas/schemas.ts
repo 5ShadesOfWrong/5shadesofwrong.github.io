@@ -39,48 +39,48 @@ export interface SiteData {
 	tagline: { reader: string; presenter: string };
 }
 
-/* ---------------- lenses.json ---------------- */
+/* ---------------- dimensions.json ---------------- */
 
-export interface LensFacet {
+export interface DimensionFacet {
 	name: string;
 	example: string;
 }
 
-export interface LensExample {
+export interface DimensionExample {
 	setup: string;
 	explanation: string;
 	why: string;
 }
 
-export type LensId = 'coherence' | 'validity' | 'faithfulness';
+export type DimensionId = 'coherence' | 'validity' | 'faithfulness';
 
-export interface Lens {
-	id: LensId;
+export interface Dimension {
+	id: DimensionId;
 	number: number;
 	name: string;
 	relationship: string;
 	/** Concise one-line definition for hover tooltips. */
 	tooltip: string;
 	definition: string;
-	/** Why the shared positive baseline holds under this lens (table row 1). */
+	/** Why the shared positive baseline holds under this dimension (table row 1). */
 	baselineWhy: string;
-	/** Per-lens example box headers (e.g. Coherent/Incoherent). */
+	/** Per-dimension example box headers (e.g. Coherent/Incoherent). */
 	exampleHeaders: { good: string; flawed: string };
-	goodExample: LensExample;
-	flawedExample: LensExample;
-	facets: LensFacet[];
+	goodExample: DimensionExample;
+	flawedExample: DimensionExample;
+	facets: DimensionFacet[];
 	footnote: string;
 }
 
-export interface LensPositiveBaseline {
+export interface DimensionPositiveBaseline {
 	title: string;
 	explanation: string;
 	context: string;
 }
 
-export interface LensesData {
-	positiveBaseline: LensPositiveBaseline;
-	lenses: Lens[];
+export interface DimensionsData {
+	positiveBaseline: DimensionPositiveBaseline;
+	dimensions: Dimension[];
 }
 
 /* ---------------- archetypes.json ---------------- */
@@ -135,8 +135,8 @@ export interface WorkflowStep {
 	title: string;
 	question: string;
 	details: string[];
-	/** Which lens this step maps to (steps 1–3); step 0 has none. */
-	lens?: LensId;
+	/** Which dimension this step maps to (steps 1–3); step 0 has none. */
+	dimension?: DimensionId;
 }
 
 export interface WorkflowData {

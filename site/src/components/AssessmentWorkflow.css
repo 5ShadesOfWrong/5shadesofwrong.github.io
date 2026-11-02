@@ -54,16 +54,16 @@
 			color var(--duration-normal) var(--ease-out);
 	}
 
-	/* Lens-colored markers (matches PipelineDiagram highlight colors) */
-	.step[data-lens='coherence'] .step-number {
+	/* Dimension-colored markers (matches PipelineDiagram highlight colors) */
+	.step[data-dimension='coherence'] .step-number {
 		border-color: var(--color-model);
 		color: var(--color-model);
 	}
-	.step[data-lens='validity'] .step-number {
+	.step[data-dimension='validity'] .step-number {
 		border-color: var(--color-positive);
 		color: var(--color-positive);
 	}
-	.step[data-lens='faithfulness'] .step-number {
+	.step[data-dimension='faithfulness'] .step-number {
 		border-color: var(--color-negative);
 		color: var(--color-negative);
 	}

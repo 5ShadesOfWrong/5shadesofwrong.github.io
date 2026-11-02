@@ -1,27 +1,27 @@
 ---
-import './ThreeLenses.css';
-import lenses from '../data/lenses.json';
-import type { LensesData } from '../schemas/schemas';
+import './ThreeDimensions.css';
+import dimensions from '../data/dimensions.json';
+import type { DimensionsData } from '../schemas/schemas';
 
-const data = lenses as unknown as LensesData;
+const data = dimensions as unknown as DimensionsData;
 const baseline = data.positiveBaseline;
-const lensList = data.lenses;
+const dimensionList = data.dimensions;
 /**
- * ThreeLenses.astro — §2 The Three Lenses (table layout, user review 2026-10-29)
+ * ThreeDimensions.astro — §2 The Three Dimensions (table layout, user review 2026-10-29)
  * ------------------------------------------------------------------------------
  * Mirrors the paper's dimensions/examples table:
  *   [ Positive baseline card — shared credit-scoring explanation ]
  *   [ Coherence ] [ Validity ] [ Faithfulness ]  ← name + relationship
- *   [ per-lens rationale for why the baseline holds ]
- *   [ Negative examples — collapsible <details> per lens ]
+ *   [ per-dimension rationale for why the baseline holds ]
+ *   [ Negative examples — collapsible <details> per dimension ]
  *
  * Security: data from typed JSON; auto-escaped rendering.
  */
 ---
 
-<section id="three-lenses" class="section" aria-labelledby="lenses-title">
+<section id="three-dimensions" class="section" aria-labelledby="dimensions-title">
 	<div class="container">
-		<h2 id="lenses-title" data-reveal>The Three Lenses</h2>
+		<h2 id="dimensions-title" data-reveal>The Three Dimensions</h2>
 		<p class="intro" data-reveal data-reveal-delay="1">
 			An explanation can be judged against three reference points — each one a
 			different way of being wrong. Usually you can only observe the explanation
@@ -37,35 +37,35 @@ const lensList = data.lenses;
 			<p class="baseline-context">{baseline.context}</p>
 		</div>
 
-		{/* ---- Three lens columns: name + relationship + baseline rationale ---- */}
-		<div class="lens-cards">
+		{/* ---- Three dimension columns: name + relationship + baseline rationale ---- */}
+		<div class="dimension-cards">
 			{
-				lensList.map((lens, i) => (
-					<article class="lens-col" id={`lens-${lens.id}`} aria-labelledby={`lens-${lens.id}-title`} data-reveal data-reveal-delay={i}>
-						<header class="lens-head">
-							<span class="lens-number" aria-hidden="true">{lens.number}</span>
+				dimensionList.map((dimension, i) => (
+					<article class="dimension-col" id={`dimension-${dimension.id}`} aria-labelledby={`dimension-${dimension.id}-title`} data-reveal data-reveal-delay={i}>
+						<header class="dimension-head">
+							<span class="dimension-number" aria-hidden="true">{dimension.number}</span>
 							<div>
-								<h3 id={`lens-${lens.id}-title`}>{lens.name}</h3>
-								<p class="relationship">{lens.relationship}</p>
+								<h3 id={`dimension-${dimension.id}-title`}>{dimension.name}</h3>
+								<p class="relationship">{dimension.relationship}</p>
 							</div>
 						</header>
 
-						<p class="baseline-why">{lens.baselineWhy}</p>
+						<p class="baseline-why">{dimension.baselineWhy}</p>
 
 						{/* First negative example shown by default in a red-bordered
 						    box (user review 2026-11-02); the rest stay collapsible. */}
 						{
-							lens.facets[0] && (
+							dimension.facets[0] && (
 								<div class="neg-example">
 									<span class="neg-example-label">Negative example</span>
-									<p><strong>{lens.facets[0].name}:</strong> {lens.facets[0].example}</p>
+									<p><strong>{dimension.facets[0].name}:</strong> {dimension.facets[0].example}</p>
 								</div>
 							)
 						}
 
 						{/* Remaining negative examples — collapsible, same pattern as the old facets */}
 						{
-							lens.facets.length > 1 && (
+							dimension.facets.length > 1 && (
 								<details class="negatives">
 									<summary>
 										More negative examples
@@ -73,7 +73,7 @@ const lensList = data.lenses;
 									</summary>
 									<ul>
 										{
-											lens.facets.slice(1).map((ex) => (
+											dimension.facets.slice(1).map((ex) => (
 												<li>
 													<strong>{ex.name}:</strong> {ex.example}
 												</li>
@@ -89,5 +89,3 @@ const lensList = data.lenses;
 		</div>
 	</div>
 </section>
-
-

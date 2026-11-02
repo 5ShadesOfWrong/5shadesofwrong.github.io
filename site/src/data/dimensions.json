@@ -1,11 +1,11 @@
 {
-	"$comment": "lenses.json — the three wrongness dimensions. Source: paper p.3–8 + the dimensions/examples table (credit-scoring running example). Structure per user review 2026-10-29: shared positive baseline, per-lens baseline rationale, negative examples (collapsible).",
+	"$comment": "dimensions.json — the three wrongness dimensions. Source: paper p.3–8 + the dimensions/examples table (credit-scoring running example). Structure per user review 2026-10-29: shared positive baseline, per-dimension baseline rationale, negative examples (collapsible).",
 	"positiveBaseline": {
 		"title": "Positive baseline",
 		"explanation": "The loan applicant was denied because their income is low and debt-to-income ratio is high, exceeding the default risk threshold.",
 		"context": "Running example: an AI-based credit scoring system."
 	},
-	"lenses": [
+	"dimensions": [
 		{
 			"id": "coherence",
 			"number": 1,

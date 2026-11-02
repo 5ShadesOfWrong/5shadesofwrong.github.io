@@ -119,9 +119,9 @@
 	.callout-truth {
 		grid-column: 1;
 		grid-row: 2;
-		/* Matches the Validity sticker/lens color (user review 2026-11-02) —
+		/* Matches the Validity sticker/dimension color (user review 2026-11-02) —
 		   was --color-model, which is the site's primary/brand accent and
-		   read as too prominent for a single lens callout. */
+		   read as too prominent for a single dimension callout. */
 		border-color: var(--dim-validity);
 		/* Stretch to match .callout-behavior's height instead of the row's
 		   default align-items: center, which let each box keep its own
@@ -138,7 +138,7 @@
 	.callout-behavior {
 		grid-column: 3;
 		grid-row: 2;
-		/* Matches the Faithfulness sticker/lens color (user review
+		/* Matches the Faithfulness sticker/dimension color (user review
 		   2026-11-02) — was --color-link (near-black), which didn't match
 		   the blue "3. Faithfulness" sticker on the arrow. */
 		border-color: var(--dim-faithfulness);
@@ -265,7 +265,7 @@
 		flex: none;
 	}
 
-	/* Lens stickers use the dedicated Axis-A dimension tokens (user review
+	/* Dimension stickers use the dedicated Axis-A dimension tokens (user review
 	   2026-10-29) — same fixed mapping as PipelineDiagram/AssessmentWorkflow. */
 	.sticker-coherence {
 		color: var(--dim-coherence);
@@ -283,7 +283,7 @@
 	   Explanation node it loops on — sized up from the inline bolt/text row
 	   so it reads as its own diagram element, not a tiny inline glyph (user
 	   review 2026-11-02). Neutral color, like the diagram's straight arrows,
-	   since it's part of the flow rather than the lens indicator. */
+	   since it's part of the flow rather than the dimension indicator. */
 	.loop {
 		width: 28px;
 		height: 28px;

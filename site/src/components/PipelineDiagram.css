@@ -83,7 +83,7 @@
 		}
 	}
 
-	/* ---- Lens badges (numbered 1/2/3 like the paper) ---- */
+	/* ---- Dimension badges (numbered 1/2/3 like the paper) ---- */
 	.badge circle {
 		fill: var(--color-bg-overlay);
 		stroke: var(--color-border);
@@ -126,7 +126,7 @@
 		border: 1px solid currentColor;
 	}
 
-	/* Lens colors use the dedicated Axis-A dimension tokens (user review
+	/* Dimension colors use the dedicated Axis-A dimension tokens (user review
 	   2026-10-29) — distinct from the Axis-B verdict tokens
 	   (--color-positive/--color-negative) used for correct/wrong chips. */
 	.chip-1 {
@@ -141,7 +141,7 @@
 		color: var(--dim-faithfulness);
 	}
 
-	/* ---- Highlight states (one lens at a time) ---- */
+	/* ---- Highlight states (one dimension at a time) ---- */
 
 	/* Coherence: self-loop on the Explanation node */
 	.hl-coherence .edge-coherence {

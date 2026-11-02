@@ -12,7 +12,7 @@ const steps = data.steps;
 const intro = data.intro;
 
 const highlightFor = (step: Step) =>
-	(step.lens as 'coherence' | 'validity' | 'faithfulness' | undefined) ?? 'none';
+	(step.dimension as 'coherence' | 'validity' | 'faithfulness' | undefined) ?? 'none';
 ---
 /**
  * AssessmentWorkflow.astro — §4 the 4-step checklist (DESIGN_PLAN §4)
@@ -25,7 +25,7 @@ const highlightFor = (step: Step) =>
  */
 
 
-// Map each step to the diagram highlight (steps 1–3 carry a lens field).
+// Map each step to the diagram highlight (steps 1–3 carry a dimension field).
 
 <section id="workflow" class="section" aria-labelledby="workflow-title">
 	<div class="container">
@@ -44,7 +44,7 @@ const highlightFor = (step: Step) =>
 			<ol class="steps" role="list">
 				{
 					steps.map((step) => (
-						<li class="step" data-lens={step.lens ?? 'context'}>
+						<li class="step" data-dimension={step.dimension ?? 'context'}>
 							<div class="step-marker">
 								<span class="step-number">{step.number}</span>
 							</div>

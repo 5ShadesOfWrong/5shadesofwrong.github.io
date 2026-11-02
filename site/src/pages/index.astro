@@ -3,7 +3,7 @@
  * index.astro — the one page
  * --------------------------
  * Assembles the page sections in DESIGN_PLAN §4 order:
- *   §0 Hero → §1 How to Access → §2 Three Lenses → §3 Archetypes
+ *   §0 Hero → §1 How to Access → §2 Three Dimensions → §3 Archetypes
  *   → §4 Workflow → §5 Practice → §6 Takeaway → §7 Footer
  *
  * User review 2026-10-19:
@@ -22,7 +22,7 @@ import NavRail from '../components/NavRail.astro';
 import LandingHero from '../components/LandingHero.astro';
 import HeroSection from '../components/HeroSection.astro';
 import HowToAccess from '../components/HowToAccess.astro';
-import ThreeLenses from '../components/ThreeLenses.astro';
+import ThreeDimensions from '../components/ThreeDimensions.astro';
 import ArchetypeViewer from '../components/ArchetypeViewer.astro';
 // import AssessmentWorkflow from '../components/AssessmentWorkflow.astro'; // commented per user review (may return)
 // import ScenarioPractice from '../components/ScenarioPractice.astro'; // commented per user review 2026-10-21 (will return later)
@@ -35,7 +35,7 @@ const sections = [
 	{ id: 'landing', label: '5 Shades of Wrong' },
 	{ id: 'how-to-access', label: 'Explanation Wrongness' },
 	{ id: 'hero', label: 'How to Assess' },
-	{ id: 'three-lenses', label: 'Three Lenses' },
+	{ id: 'three-dimensions', label: 'Three Dimensions' },
 	{ id: 'archetypes', label: '5(0) Shades of Wrong' },
 	// { id: 'workflow', label: 'Assessment Workflow' }, // commented per user review
 	// { id: 'practice', label: 'Practice Scenarios' }, // commented per user review 2026-10-21
@@ -53,7 +53,7 @@ const DESCRIPTION =
 	<LandingHero />
 	<HowToAccess />
 	<HeroSection />
-	<ThreeLenses />
+	<ThreeDimensions />
 	<ArchetypeViewer />
 	<!-- <AssessmentWorkflow /> — commented per user review 2026-10-19 (may return) -->
 	<!-- <ScenarioPractice /> — commented per user review 2026-10-21 (will return later) -->

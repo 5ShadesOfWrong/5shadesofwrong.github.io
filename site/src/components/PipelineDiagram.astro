@@ -14,7 +14,7 @@ const uid = id ?? `pd-${Math.random().toString(36).slice(2, 8)}`;
  *
  *   Training Data → [AI Model] → [XAI Method] → [Explanation] → [Ground Truth]
  *
- * The three lens relationships are drawn as short, clearly separated arcs
+ * The three dimension relationships are drawn as short, clearly separated arcs
  * ABOVE the pipeline, each with its numbered chip (1/2/3):
  *   1 Coherence    — Explanation ↔ itself (loop on the Explanation node)
  *   2 Validity     — Explanation ↔ Ground Truth (long arc)
@@ -55,7 +55,7 @@ interface Props {
 		<path class="edge" d="M 482 170 L 528 170" marker-end={`url(#${uid}-arrow)`} />
 		<path class="edge" d="M 648 170 L 616 170" marker-end={`url(#${uid}-arrow)`} />
 
-		<!-- Lens arcs above the pipeline (short, separated, never crossing) -->
+		<!-- Dimension arcs above the pipeline (short, separated, never crossing) -->
 		<!-- 2 Validity: Explanation ↔ Ground Truth (long arc) -->
 		<path class="edge edge-validity" d="M 590 128 C 590 84 660 84 660 128" marker-end={`url(#${uid}-arrow)`} />
 		<!-- 3 Faithfulness: Explanation ↔ AI Model (medium arc) -->
@@ -64,7 +64,7 @@ interface Props {
 		<path class="edge edge-coherence" d="M 530 128 C 530 100 560 100 560 128" marker-end={`url(#${uid}-arrow)`} />
 
 		<!-- ================= Nodes ================= -->
-		<!-- Training Data (small, muted — context, not a lens target) -->
+		<!-- Training Data (small, muted — context, not a dimension target) -->
 		<g class="node node-data">
 			<rect x="30" y="145" width="120" height="50" rx="10" />
 			<text x="90" y="175" text-anchor="middle" class="subtext">Training Data</text>
@@ -84,7 +84,7 @@ interface Props {
 			<text x="424" y="185" text-anchor="middle" class="subtext">explains</text>
 		</g>
 
-		<!-- Explanation (the lens hub) -->
+		<!-- Explanation (the dimension hub) -->
 		<g class="node node-explanation">
 			<rect x="532" y="140" width="116" height="60" rx="12" />
 			<text x="590" y="167" text-anchor="middle">Explanation</text>
@@ -98,7 +98,7 @@ interface Props {
 			<text x="663" y="185" text-anchor="middle" class="small">Truth</text>
 		</g>
 
-		<!-- ================= Lens chips (1/2/3) ================= -->
+		<!-- ================= Dimension chips (1/2/3) ================= -->
 		<g class="badge badge-coherence">
 			<circle cx="545" cy="96" r="13" />
 			<text x="545" y="101" text-anchor="middle">1</text>
