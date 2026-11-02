@@ -42,13 +42,24 @@
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: var(--space-6);
-		align-items: stretch;
+		/* `start` (not `stretch`) so a card's height is its own content plus
+		   the JS-set `min-height` below — never pulled taller just because a
+		   sibling card is taller. Grid's `stretch` would otherwise re-equalize
+		   every card's height whenever any ONE of them changed (e.g. a
+		   "More negative examples" toggle opening), making the still-collapsed
+		   cards visibly resize too (user review 2026-11-02). */
+		align-items: start;
 	}
 
 	.dimension-col {
 		display: flex;
 		flex-direction: column;
 		background: var(--color-bg-raised);
+		/* Equal height while collapsed, set once by equalize-dimension-cards.ts
+		   from each card's natural (collapsed) height — a fixed floor, so
+		   opening one card's <details> only grows that card; the others stay
+		   pinned at this height instead of shrinking or stretching to match. */
+		min-height: var(--dimension-min-height, 0);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
 		padding: var(--space-6);
