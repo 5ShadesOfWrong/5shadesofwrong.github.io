@@ -52,22 +52,37 @@ const lensList = data.lenses;
 
 						<p class="baseline-why">{lens.baselineWhy}</p>
 
-						{/* Negative examples — collapsible, same pattern as the old facets */}
-						<details class="negatives">
-							<summary>
-								Negative examples
-								<span class="facet-count">({lens.facets.length})</span>
-							</summary>
-							<ul>
-								{
-									lens.facets.map((ex) => (
-										<li>
-											<strong>{ex.name}:</strong> {ex.example}
-										</li>
-									))
-								}
-							</ul>
-						</details>
+						{/* First negative example shown by default in a red-bordered
+						    box (user review 2026-11-02); the rest stay collapsible. */}
+						{
+							lens.facets[0] && (
+								<div class="neg-example">
+									<span class="neg-example-label">Negative example</span>
+									<p><strong>{lens.facets[0].name}:</strong> {lens.facets[0].example}</p>
+								</div>
+							)
+						}
+
+						{/* Remaining negative examples — collapsible, same pattern as the old facets */}
+						{
+							lens.facets.length > 1 && (
+								<details class="negatives">
+									<summary>
+										More negative examples
+										
+									</summary>
+									<ul>
+										{
+											lens.facets.slice(1).map((ex) => (
+												<li>
+													<strong>{ex.name}:</strong> {ex.example}
+												</li>
+											))
+										}
+									</ul>
+								</details>
+							)
+						}
 					</article>
 				))
 			}

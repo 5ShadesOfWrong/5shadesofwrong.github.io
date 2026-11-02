@@ -44,13 +44,34 @@
 	.shade-chip {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--space-2);
-		padding: var(--space-2) var(--space-4);
 		background: var(--color-bg-raised);
 		border: 1px solid var(--color-border);
 		border-radius: 999px;
 		font-family: var(--font-display);
 		font-size: var(--text-sm);
+		color: var(--color-text);
+		transition: border-color var(--duration-fast) var(--ease-out),
+			transform var(--duration-fast) var(--ease-out);
+	}
+
+	/* The whole chip is a clickable link to its archetype (user review
+	   2026-11-02). */
+	.shade-link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-4);
+		color: var(--color-text);
+		text-decoration: none;
+		border-radius: 999px;
+	}
+
+	.shade-chip:hover {
+		border-color: var(--color-model);
+		transform: translateY(-1px);
+	}
+
+	.shade-link:hover {
 		color: var(--color-text);
 	}
 

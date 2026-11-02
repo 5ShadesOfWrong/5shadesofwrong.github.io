@@ -3,7 +3,12 @@
 	.flow {
 		margin: 0;
 		display: grid;
-		grid-template-columns: minmax(14rem, 17rem) 1fr minmax(14rem, 17rem);
+		/* The middle track is capped so the callout boxes get the leftover
+		   width — otherwise the greedy 1fr track absorbs all extra space and
+		   the callouts stay at their minimum, making long labels like
+		   "Functioning/Behavior:" wrap into many cramped lines (user review
+		   2026-11-02). */
+		grid-template-columns: minmax(16rem, 20rem) minmax(0, 34rem) minmax(16rem, 20rem);
 		gap: var(--space-6);
 		align-items: center;
 	}
@@ -12,16 +17,16 @@
 	   (user review 2026-11-02). */
 	@media (min-width: 1600px) {
 		.flow {
-			grid-template-columns: minmax(16rem, 22rem) 1fr minmax(16rem, 22rem);
+			grid-template-columns: minmax(18rem, 24rem) minmax(0, 38rem) minmax(18rem, 24rem);
 		}
 	}
 
-	/* Notebook widths: the fixed 14–17rem callouts + 9rem arrows overflow
+	/* Notebook widths: the fixed callouts + 9rem arrows overflow
 	   under the nav rail (user bug report 2026-10-29). Let the callouts
 	   shrink and tighten the arrows so the row always fits. */
 	@media (max-width: 1360px) {
 		.flow {
-			grid-template-columns: minmax(11rem, 14rem) 1fr minmax(11rem, 14rem);
+			grid-template-columns: minmax(13rem, 16rem) minmax(0, 30rem) minmax(13rem, 16rem);
 			gap: var(--space-4);
 		}
 

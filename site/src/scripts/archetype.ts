@@ -47,6 +47,14 @@ function init(): void {
 		dot.addEventListener('click', () => show(i));
 	}
 
+	// Jump to a specific archetype from elsewhere on the page (e.g. the hero
+	// shade chips dispatch `shade:show` with the archetype id — user review
+	// 2026-11-02). Falls back to the first card if the id is unknown.
+	window.addEventListener('shade:show', ((event: CustomEvent<{ id: string }>) => {
+		const target = cards.findIndex((card) => card.id === `archetype-${event.detail.id}`);
+		show(target >= 0 ? target : 0);
+	}) as EventListener);
+
 	// Keyboard navigation scoped to the viewer region (doesn't hijack page arrows).
 	const viewer = document.querySelector<HTMLElement>('.viewer');
 	viewer?.addEventListener('keydown', (event) => {

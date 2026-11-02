@@ -83,6 +83,41 @@
 		color: var(--color-text-muted);
 	}
 
+	/* ---- First negative example: shown by default in a red-bordered box
+	     (user review 2026-11-02). A tiny, self-contained "what wrong looks
+	     like" teaser; the remaining examples stay collapsible below.
+	     Red border only — the background matches the card (no tint). ---- */
+	.neg-example {
+		margin-top: var(--space-4);
+		padding: var(--space-3) var(--space-4);
+		/* True red border (user review 2026-11-02) — the semantic
+		   --color-negative is vermillion/orange, so use a clear red here. */
+		border: 1px solid #ff5c5c;
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-raised);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+		line-height: 1.5;
+	}
+
+	.neg-example-label {
+		display: block;
+		margin-bottom: var(--space-2);
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: #ff5c5c;
+	}
+
+	.neg-example p {
+		margin: 0;
+	}
+
+	.neg-example strong {
+		color: var(--color-text);
+	}
+
 	/* ---- Negative examples (collapsible, like the old facets) ---- */
 	.negatives {
 		margin-top: var(--space-4);

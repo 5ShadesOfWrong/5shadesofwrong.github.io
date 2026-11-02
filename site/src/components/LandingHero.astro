@@ -16,14 +16,15 @@ import type { Archetype, ArchetypesData } from '../schemas/schemas';
  * Security: static content from typed JSON; auto-escaped.
  */
 
-// The five shades, in paper order — text-only chips. The Perfect Explainer
-// is NOT listed: it lives in the hero backdrop (see below).
+// The five shades, in paper order — clickable chips that jump to their
+// archetype in the 5 Shades viewer (user review 2026-11-02). The Perfect
+// Explainer is NOT listed: it lives in the hero backdrop (see below).
 const shades = [
-	'Perfect Liar',
-	'Illuminator',
-	'Cassandra',
-	'Storyteller',
-	'Hallucinator',
+	{ id: 'perfect-liar', name: 'Perfect Liar' },
+	{ id: 'illuminator', name: 'Illuminator' },
+	{ id: 'confused-illuminator', name: 'Cassandra' },
+	{ id: 'storyteller', name: 'Storyteller' },
+	{ id: 'hallucinator', name: 'Hallucinator' },
 ];
 
 // The Perfect Explainer — same typed data the viewer uses.
@@ -102,10 +103,17 @@ const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Arc
 
 		<ul class="shades" data-reveal data-reveal-delay="3" aria-label="The five shades of wrong">
 			{
-				shades.map((name, i) => (
+				shades.map((shade, i) => (
 					<li class="shade-chip" data-reveal data-reveal-delay={3 + i}>
-						<span class="shade-index" aria-hidden="true">{i + 1}</span>
-						{name}
+						<a
+							href={`#archetype-${shade.id}`}
+							class="shade-link"
+							data-shade-target={shade.id}
+							aria-label={`Go to the ${shade.name} example`}
+						>
+							<span class="shade-index" aria-hidden="true">{i + 1}</span>
+							{shade.name}
+						</a>
 					</li>
 				))
 			}
@@ -139,6 +147,30 @@ const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Arc
 			tab.addEventListener('click', () => show(tab.dataset.backdropTab ?? ''));
 		}
 	}
+
+	// Shade chips → jump to the matching archetype in the 5 Shades viewer.
+	// We prevent the default anchor jump and instead show the archetype first,
+	// then smooth-scroll to its card so the page glides to the example (not
+	// the section start) — user review 2026-11-02. No dynamic HTML.
+	const shadeLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-shade-target]'));
+	for (const link of shadeLinks) {
+		link.addEventListener('click', (event) => {
+			const id = link.dataset.shadeTarget;
+			if (!id) return;
+			event.preventDefault();
+			// Tell the viewer to switch to this archetype.
+			window.dispatchEvent(new CustomEvent('shade:show', { detail: { id } }));
+			// Smooth-scroll to the (now visible) archetype card. The viewer's
+			// DOM change (switching the visible card) can interrupt a smooth
+			// scroll if it lands mid-flight, so wait one frame for it to settle
+			// before starting the glide.
+			requestAnimationFrame(() => {
+				const card = document.getElementById(`archetype-${id}`);
+				if (card) {
+					const top = card.getBoundingClientRect().top + window.scrollY;
+					window.scrollTo({ top, behavior: 'smooth' });
+				}
+			});
+		});
+	}
 </script>
-
-
