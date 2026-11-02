@@ -1,11 +1,11 @@
 {
   "$comment": "site.json — global site metadata.",
   "title": "5 Shades of Wrong",
-  "subtitle": "A common Language on Wrong AI Explanations.",
+  "subtitle": "A common Language on \"Wrong\" AI Explanations.",
   "kicker": "An interactive companion to the paper",
   "landing": {
     "title": "5 Shades of Wrong",
-    "subtitle": "A common Language on Wrong AI Explanations"
+    "subtitle": "A common Language on \"Wrong\" AI Explanations"
   },
   "paper": {
     "title": "5(0) Shades of Wrong: Toward a Common Language for “Wrong” AI Explanations",
