@@ -22,66 +22,74 @@
  * qualitative palette (adjusted in lightness for the dark background) so
  * Axis A and Axis B stay distinguishable under deuteranopia/protanopia.
  *
- * Dark theme base (DESIGN_PLAN §6). All color pairs used for text must
- * keep WCAG AA contrast (≥ 4.5:1) — verified pairs are marked below.
+ * "Minimal Paper" theme (user review 2026-11-02 — chosen from 4 live
+ * light-theme candidates over the original dark "indigo night" theme).
+ * Warm off-white surface, serif headings + sans body, near-monochrome UI
+ * chrome — color is reserved for the paper's figure/dimension semantics
+ * rather than used in buttons/borders/links. All color pairs used for text
+ * must keep WCAG AA contrast (≥ 4.5:1) — verified pairs are marked below.
  */
 
 :root {
-	/* ---- Color: base surfaces (indigo night — bright enough to feel alive,
-	 *      dark enough for projection; user review 2026-10-19) ---- */
-	--color-bg: #1b2242; /* page background */
-	--color-bg-deep: #141a33; /* gradient anchor (darker edge) */
-	--color-bg-raised: #242c52; /* cards, raised surfaces */
-	--color-bg-overlay: #2c3560; /* modals, tooltips, code */
-	--color-border: #3d4776; /* hairlines, card borders */
+	/* ---- Color: base surfaces (warm off-white — "printed page" feel) ---- */
+	--color-bg: #faf9f6; /* page background */
+	--color-bg-deep: #f3f2ee; /* gradient anchor (kept for structural compat; see body rule in base.css) */
+	--color-bg-raised: #ffffff; /* cards, raised surfaces */
+	--color-bg-overlay: #efede7; /* modals, tooltips, code */
+	--color-border: #ddd9ce; /* hairlines, card borders */
 
 	/* ---- Color: text (AA on --color-bg) ---- */
-	--color-text: #f2f5fd; /* primary text — 14:1 on bg */
-	--color-text-muted: #b8c2e4; /* secondary text — 7.5:1 on bg */
-	--color-text-faint: #909bc4; /* captions — 5:1 on bg */
+	--color-text: #201e1a; /* primary text — ~16:1 on bg */
+	--color-text-muted: #55524a; /* secondary text — ~7:1 on bg */
+	--color-text-faint: #726e63; /* captions — ~4.7:1 on bg */
 
 	/* ---- Color: paper legend accents (meaningful use only) ----
 	 * --color-model / --color-positive / --color-negative / --color-neutral
-	 * remain the ARCHETYPE legend (purple = model-used, teal = honest
-	 * highlight, vermillion = misleading highlight, gray = unimportant) —
-	 * identical semantics to the paper's wolf/husky figure. positive/negative
-	 * were shifted from plain green/red to the Okabe–Ito-derived teal/
-	 * vermillion pair below so the SAME verdict pair also works as the
-	 * colorblind-safe Axis B (correct/honest vs. wrong/misleading) used for
-	 * verdict chips elsewhere on the page.
+	 * remain the ARCHETYPE legend (purple = model-used, teal/emerald =
+	 * honest highlight, vermillion/orange = misleading highlight, gray =
+	 * unimportant) — identical semantics to the paper's wolf/husky figure.
+	 * Shades below are darkened from the original dark-theme hues so they
+	 * keep AA contrast on the white/off-white background (user review
+	 * 2026-11-02 — "Minimal Paper" theme) while staying the same hue
+	 * family, so readers who saw the paper's figures still recognize them.
+	 * UI chrome (borders, buttons, --color-link) deliberately stays
+	 * near-monochrome — color is reserved for these figure/dimension
+	 * accents only, never for interface decoration.
 	 */
-	--color-model: #b39bff; /* purple — model-used features */
-	--color-positive: #34d8b0; /* teal — highlighted/honest/correct (was #4ade80) */
-	--color-negative: #ff8a5b; /* vermillion — highlighted/misleading/wrong (was #fb7185) */
-	--color-neutral: #808db8; /* gray — unimportant */
+	--color-model: #6d28d9; /* violet — model-used features — ~7:1 on bg */
+	--color-positive: #047857; /* emerald — highlighted/honest/correct — ~5.2:1 on bg */
+	--color-negative: #c2410c; /* orange — highlighted/misleading/wrong — ~4.9:1 on bg */
+	--color-neutral: #726e63; /* warm gray — unimportant */
 
 	/* ---- Color: interactive ---- */
-	--color-link: #8ecbff; /* links — 9:1 on bg */
-	--color-focus: #ffd166; /* focus ring — high visibility */
+	--color-link: #201e1a; /* links — same as body text; underlined (base.css) since chrome stays grayscale */
+	--color-focus: #b45309; /* focus ring — amber-brown, high visibility on light bg */
 
 	/* ---- Color: wrongness DIMENSIONS (Axis A) ----
 	 * Fixed, unique identity per dimension, used identically everywhere a
 	 * lens/dimension is referenced (PipelineDiagram, PipelineFlow,
-	 * AssessmentWorkflow, LensCard numbers). Deliberately reuses the
-	 * --color-model/--color-focus/--color-link hues (distinct from Axis B's
-	 * teal/vermillion) rather than inventing a 6th/7th/8th hue on an
-	 * already five-hue palette — but canonicalizes ONE fixed mapping,
-	 * replacing the three different mappings that used to compete across
-	 * components (user review 2026-10-29).
+	 * AssessmentWorkflow, LensCard numbers). Canonicalizes ONE fixed
+	 * mapping across components (user review 2026-10-29); faithfulness
+	 * keeps a dedicated blue since --color-link no longer carries one.
 	 */
-	--dim-coherence: var(--color-focus); /* amber — explanation vs. itself */
-	--dim-validity: var(--color-model); /* purple — explanation vs. ground truth */
-	--dim-faithfulness: var(--color-link); /* blue — explanation vs. model */
+	--dim-coherence: var(--color-focus); /* amber-brown — explanation vs. itself */
+	--dim-validity: var(--color-model); /* violet — explanation vs. ground truth */
+	--dim-faithfulness: #1d4ed8; /* blue — explanation vs. model — ~6.7:1 on bg */
 
-	/* ---- Ambient background glows (depth without clutter) ---- */
-	--glow-model: rgb(179 155 255 / 0.14);
-	--glow-teal: rgb(94 234 212 / 0.09);
-	--glow-rose: rgb(251 113 133 / 0.07);
+	/* ---- Ambient background glows ----
+	 * Dark theme used colored radial glows for depth; the light "printed
+	 * page" theme is flat by design, so these resolve to transparent
+	 * (see body background in base.css) but stay defined so nothing
+	 * referencing them breaks.
+	 */
+	--glow-model: transparent;
+	--glow-teal: transparent;
+	--glow-rose: transparent;
 
-	/* ---- Typography ---- */
-	--font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-	--font-body: 'Inter', system-ui, -apple-system, sans-serif;
-	--font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+	/* ---- Typography (serif headings + sans body — "Minimal Paper") ---- */
+	--font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+	--font-body: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+	--font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
 
 	--text-xs: 0.75rem; /* 12px */
 	--text-sm: 0.875rem; /* 14px */
@@ -111,8 +119,8 @@
 	--radius-sm: 6px;
 	--radius-md: 10px;
 	--radius-lg: 16px;
-	--shadow-card: 0 2px 8px rgb(0 0 0 / 0.35);
-	--shadow-raised: 0 8px 24px rgb(0 0 0 / 0.45);
+	--shadow-card: 0 0 0 1px var(--color-border);
+	--shadow-raised: 0 0 0 1px var(--color-border), 0 4px 12px rgb(0 0 0 / 0.05);
 
 	/* ---- Motion ---- */
 	--duration-fast: 150ms;

@@ -20,7 +20,7 @@
 }
 
 html {
-	color-scheme: dark; /* native widgets match the dark theme */
+	color-scheme: light; /* native widgets match the light "paper" theme */
 	scroll-behavior: smooth;
 	-webkit-text-size-adjust: 100%;
 }
@@ -33,13 +33,9 @@ html {
 
 body {
 	background-color: var(--color-bg);
-	/* Ambient depth: two soft glows over a subtle vertical gradient.
-	   Fixed attachment = the light "stays" while content scrolls (parallax feel). */
-	background-image:
-		radial-gradient(52rem 36rem at 85% -5%, var(--glow-model), transparent 65%),
-		radial-gradient(44rem 32rem at -10% 38%, var(--glow-teal), transparent 65%),
-		radial-gradient(40rem 30rem at 55% 105%, var(--glow-rose), transparent 65%),
-		linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-deep) 100%);
+	/* Flat "printed page" background — no ambient glows (those were a dark-
+	   theme depth cue; --glow-* resolve to transparent now, see tokens.css). */
+	background-image: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-deep) 100%);
 	background-attachment: fixed;
 	color: var(--color-text);
 	font-family: var(--font-body);
@@ -154,7 +150,7 @@ video {
 	content: '';
 	position: absolute;
 	inset: 0;
-	background: rgb(255 255 255 / 0.02);
+	background: rgb(0 0 0 / 0.025);
 	pointer-events: none;
 }
 
