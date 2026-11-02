@@ -8,23 +8,6 @@
 	}
 
 	/* ---- Paper legend ---- */
-	.legend {
-		margin-top: var(--space-6);
-		padding: 0;
-		list-style: none;
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-4);
-		font-size: var(--text-sm);
-		color: var(--color-text-muted);
-	}
-
-	.legend li {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-2);
-	}
-
 	.swatch {
 		width: 12px;
 		height: 12px;
@@ -79,18 +62,63 @@
 
 	.head {
 		display: flex;
-		align-items: center;
-		gap: var(--space-3);
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--space-4);
+		flex-wrap: wrap;
+		padding-bottom: var(--space-4);
+		border-bottom: 1px solid var(--color-border);
 	}
 
-	/* Shade name in the card header — highlighted in white (user review
-	   2026-10-28), matching the emphasis style of the section title and
-	   the quoted explanation text. */
+	/* Shade name in the card header — made explicitly larger/bolder than a
+	   default <h3> (user review 2026-11-02: titles felt too quiet) rather
+	   than relying on inherited sizing, since a global h3 rule elsewhere
+	   (SiteFooter.css) was already proven to clobber unscoped headings.
+	   The old dark-theme text-shadow "glow" trick is dropped — invisible/
+	   messy on the light "Minimal Paper" background — in favor of a small
+	   accent rule under the name, echoing the archetype's dot color. */
 	.head h3 {
 		margin: 0;
+		font-size: var(--text-3xl);
 		color: var(--color-text);
 		font-weight: 700;
-		text-shadow: 0 0 18px color-mix(in srgb, var(--color-text) 45%, transparent);
+		letter-spacing: -0.01em;
+	}
+
+	.head h3::after {
+		content: '';
+		display: block;
+		margin-top: var(--space-2);
+		width: 2.5rem;
+		height: 3px;
+		border-radius: 2px;
+		background: var(--color-model);
+	}
+
+	.archetype.correct .head h3::after {
+		background: var(--color-positive);
+	}
+
+	/* ---- Per-card legend (top-right of the box) — duplicates the section
+	   legend above the viewer (user review 2026-11-02) so the relevant/
+	   unimportant feature colors are visible without scrolling back up
+	   while stepping through archetypes one at a time. */
+	.card-legend {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		gap: var(--space-3);
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		color: var(--color-text-muted);
+		white-space: nowrap;
+	}
+
+	.card-legend li {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-1);
 	}
 
 	/* ---- Body: scheme row (truth → explanation ← prediction) + story below ---- */
@@ -165,20 +193,15 @@
 		transform: translateZ(0);
 	}
 
-	/* Panel borders follow the §2 scheme colors (user review 2026-10-28):
-	   Ground Truth = purple (model color), Explanation = gold (focus —
-	   matches the §2 explanation accent, no longer green), Prediction =
-	   blue (link color). Border only — the scenes stay neutral. */
-	.scene-truth {
-		border-color: var(--color-model);
-	}
-
-	.scene-explanation {
-		border-color: var(--color-focus);
-	}
-
+	/* Panel borders were previously tinted per §2 scheme color (purple/gold/
+	   blue); switched to a single neutral frame matching the body text
+	   color (user review 2026-11-02) so color stays reserved for the
+	   figure content itself (relevant/unimportant feature highlighting)
+	   rather than the chrome around it. */
+	.scene-truth,
+	.scene-explanation,
 	.scene-prediction {
-		border-color: var(--color-link);
+		border-color: var(--color-text-muted);
 	}
 
 	/* Panel header ABOVE the scene (user review 2026-10-28): the §2 scheme
@@ -241,19 +264,6 @@
 		color: var(--color-text-muted);
 	}
 
-	/* Panel-tinted header colors, matching the border classes above. */
-	.scene-truth .scene-head {
-		color: var(--color-model);
-	}
-
-	.scene-explanation .scene-head {
-		color: var(--color-focus);
-	}
-
-	.scene-prediction .scene-head {
-		color: var(--color-link);
-	}
-
 	.scene svg {
 		position: absolute;
 		inset: 0;
@@ -288,7 +298,9 @@
 	}
 
 	/* Background used/highlighted → tint the whole sky (paper-style).
-	   NOTE: panelState() emits feat-* classes (same system as moons/wolf). */
+	   NOTE: panelState() emits feat-* classes (same system as moons/wolf).
+	   A diluted mix (not the solid accent) keeps a full-panel wash from
+	   reading as "heavy" (user review 2026-11-02). */
 	.sky.feat-used {
 		fill: color-mix(in srgb, var(--color-model) 30%, var(--color-bg-overlay));
 	}
@@ -319,7 +331,7 @@
 	   NOTE: the state class sits ON the <g class="moon"> element (compound
 	   selector `.moon.feat-x`), styling the .moon-disc inside it. */
 	.moon.feat-used .moon-disc {
-		fill: var(--color-model);
+		fill: var(--color-model-soft);
 		opacity: 1;
 	}
 
@@ -360,7 +372,7 @@
 	}
 
 	.wolf.feat-used {
-		background-color: var(--color-model);
+		background-color: var(--color-model-soft);
 		opacity: 1;
 	}
 

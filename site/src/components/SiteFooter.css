@@ -12,7 +12,13 @@
 		gap: var(--space-12);
 	}
 
-	h3 {
+	/* Scoped to .footer-grid (BUGFIX 2026-11-02): this file is imported as a
+	   plain stylesheet, not an Astro <style> block, so it is never scoped
+	   automatically. A bare `h3` selector here was leaking globally and
+	   overriding every <h3> on the page — including the archetype card
+	   titles in ArchetypeViewer, which were rendering small/uppercase/faint
+	   instead of their own intended large serif style. */
+	.footer-grid h3 {
 		font-size: var(--text-sm);
 		text-transform: uppercase;
 		letter-spacing: 0.08em;

@@ -109,21 +109,27 @@
 	.callout-truth {
 		grid-column: 1;
 		grid-row: 2;
-		border-color: var(--color-model);
+		/* Matches the Validity sticker/lens color (user review 2026-11-02) —
+		   was --color-model, which is the site's primary/brand accent and
+		   read as too prominent for a single lens callout. */
+		border-color: var(--dim-validity);
 	}
 
 	.callout-truth h3 {
-		color: var(--color-model);
+		color: var(--dim-validity);
 	}
 
 	.callout-behavior {
 		grid-column: 3;
 		grid-row: 2;
-		border-color: var(--color-link);
+		/* Matches the Faithfulness sticker/lens color (user review
+		   2026-11-02) — was --color-link (near-black), which didn't match
+		   the blue "3. Faithfulness" sticker on the arrow. */
+		border-color: var(--dim-faithfulness);
 	}
 
 	.callout-behavior h3 {
-		color: var(--color-link);
+		color: var(--dim-faithfulness);
 	}
 
 	/* ---- Central flow ---- */
@@ -141,6 +147,28 @@
 		align-items: center;
 		gap: var(--space-2);
 		text-align: center;
+	}
+
+	/* The Coherence sticker + loop sit above the Explanation node's icon.
+	   They're taken out of flow (absolutely positioned) so the flex item's
+	   own box stays the same height as the Ground Truth/AI Model nodes —
+	   otherwise the extra height above pushed the chart icon down and out
+	   of vertical alignment with the other two icons (user review
+	   2026-11-02). */
+	.node-chart {
+		position: relative;
+	}
+
+	.node-chart-topper {
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-2);
+		margin-bottom: var(--space-2);
 	}
 
 	.icon {
@@ -207,12 +235,14 @@
 		gap: 4px;
 		font-weight: 700;
 		font-size: var(--text-sm);
+		white-space: nowrap;
 	}
 
 	.bolt {
-		width: 10px;
-		height: 14px;
+		width: 12px;
+		height: 16px;
 		fill: currentColor;
+		flex: none;
 	}
 
 	/* Lens stickers use the dedicated Axis-A dimension tokens (user review
@@ -229,9 +259,15 @@
 		color: var(--dim-faithfulness);
 	}
 
+	/* The self-loop arrow sits below the Coherence label, pointing at the
+	   Explanation node it loops on — sized up from the inline bolt/text row
+	   so it reads as its own diagram element, not a tiny inline glyph (user
+	   review 2026-11-02). Neutral color, like the diagram's straight arrows,
+	   since it's part of the flow rather than the lens indicator. */
 	.loop {
-		width: 16px;
-		height: 16px;
+		width: 28px;
+		height: 28px;
+		color: var(--color-text-muted);
 	}
 
 	.loop path {

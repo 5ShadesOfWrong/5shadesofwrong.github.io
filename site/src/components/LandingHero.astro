@@ -48,24 +48,24 @@ const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Arc
 							name: 'Ground Truth',
 							question: 'What is the perfect explainer?',
 							caption:
-								'The image shows a wolf. It is possible to identify it by the shape of the body — the ears, the snout, the posture.',
-							label: 'Ground truth scene: the untouched image — it truly shows a wolf.',
+								'The image shows a wolf. It is possible to identify it by the shape of the body — the ears, the snout, the posture — and by the moon above it.',
+							label: 'Ground truth scene: the untouched image — it truly shows a wolf under a moon.',
 						},
 						{
 							kind: 'prediction' as const,
 							name: 'Model decision',
 							question: 'What is the perfect explainer?',
 							caption:
-								'In the perfect explainer, the model uses the shape of the animal as the feature and predicts that it is a wolf.',
-							label: 'Prediction scene: the model actually used the shape (purple).',
+								'In the perfect explainer, the model uses the shape of the animal and the moon as features and predicts that it is a wolf.',
+							label: 'Prediction scene: the model actually used the shape and the moon (purple).',
 						},
 						{
 							kind: 'explanation' as const,
 							name: 'Explanation',
 							question: 'What is the perfect explainer?',
 							caption:
-								'In the perfect explainer, the explanation highlights the shape too, giving the same reason as the model — nothing hidden, nothing invented.',
-							label: 'Explanation scene: the explanation highlights the shape (green — honest).',
+								'In the perfect explainer, the explanation highlights the shape and the moon too, giving the same reason as the model — nothing hidden, nothing invented.',
+							label: 'Explanation scene: the explanation highlights the shape and the moon (green — honest).',
 						},
 					].map((step, i) => (
 						<div class="backdrop-step" hidden={i !== 0} data-backdrop-step data-step-kind={step.kind}>

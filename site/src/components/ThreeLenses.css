@@ -42,10 +42,12 @@
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: var(--space-6);
-		align-items: start;
+		align-items: stretch;
 	}
 
 	.lens-col {
+		display: flex;
+		flex-direction: column;
 		background: var(--color-bg-raised);
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-lg);
@@ -120,7 +122,12 @@
 
 	/* ---- Negative examples (collapsible, like the old facets) ---- */
 	.negatives {
-		margin-top: var(--space-4);
+		/* Pushed to the bottom of the (now flex, stretch-height) card so the
+		   "More negative examples" toggle lines up across all three lenses,
+		   regardless of how much baseline/example text sits above it (user
+		   review 2026-11-02). */
+		margin-top: auto;
+		padding-top: var(--space-4);
 	}
 
 	.negatives summary {

@@ -135,17 +135,6 @@ const GROUND_PATH = 'M0 152 Q 60 138 120 150 T 240 146 L 240 200 L 0 200 Z';
 		an explanation can be wrong. Step through them one at a time.
 		</p>
 
-		<ul class="legend" aria-label="Color legend from the paper" data-reveal data-reveal-delay="2">
-			{
-				Object.values(legend).map((item) => (
-					<li>
-						<span class="swatch" style={`background: ${item.color}`} aria-hidden="true" />
-						{item.label}
-					</li>
-				))
-			}
-		</ul>
-
 		<div class="viewer" data-reveal data-reveal-delay="2">
 			<div class="stage" data-viewer-stage>
 				{
@@ -164,6 +153,16 @@ const GROUND_PATH = 'M0 152 Q 60 138 120 150 T 240 146 L 240 200 L 0 200 Z';
 							>
 								<header class="head">
 									<h3>{a.name}</h3>
+									<ul class="card-legend" aria-label="Color legend from the paper">
+										{
+											Object.values(legend).map((item) => (
+												<li>
+													<span class="swatch" style={`background: ${item.color}`} aria-hidden="true" />
+													{item.label}
+												</li>
+											))
+										}
+									</ul>
 								</header>
 
 								<div class="body">

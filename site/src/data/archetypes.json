@@ -3,7 +3,7 @@
 	"legend": {
 		"relevant": {
 			"label": "Relevant features",
-			"color": "var(--color-model)"
+			"color": "var(--color-model-soft)"
 		},
 		"unimportant": {
 			"label": "Unimportant features",
@@ -18,10 +18,10 @@
 			"verdict": "correct",
 			"summary": "The explanation highlights the features the model actually used, and those features are the right reasons.",
 			"prediction": "Wolf",
-			"explanation": "The image shows a wolf because of the shape.",
+			"explanation": "The image shows a wolf because of the shape and the moon.",
 			"groundTruthFeature": "shape and moon",
-			"modelUsed": "shape",
-			"highlighted": "shape",
+			"modelUsed": "shape and moon",
+			"highlighted": "shape and moon",
 			"coherent": true,
 			"valid": true,
 			"faithful": true,
@@ -30,13 +30,13 @@
 				"used": {
 					"wolf": true,
 					"sky": false,
-					"leftMoon": false,
+					"leftMoon": true,
 					"rightMoon": false
 				},
 				"highlight": {
 					"wolf": true,
 					"sky": false,
-					"leftMoon": false,
+					"leftMoon": true,
 					"rightMoon": false
 				}
 			}
@@ -51,7 +51,7 @@
 			"explanation": "The image shows a wolf because of the shape.",
 			"groundTruthFeature": "shape and moon",
 			"modelUsed": "background",
-			"highlighted": "shape",
+			"highlighted": "shape and moon",
 			"coherent": true,
 			"valid": true,
 			"faithful": false,
@@ -66,7 +66,7 @@
 				"highlight": {
 					"wolf": true,
 					"sky": false,
-					"leftMoon": false,
+					"leftMoon": true,
 					"rightMoon": false
 				}
 			}

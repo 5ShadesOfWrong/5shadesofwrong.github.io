@@ -57,6 +57,11 @@
 	 * accents only, never for interface decoration.
 	 */
 	--color-model: #6d28d9; /* violet — model-used features — ~7:1 on bg */
+	/* Lighter lavender fill for the wolf/moon "relevant feature" silhouette —
+	   the full-strength --color-model reads too heavy once it covers a big
+	   solid shape; this softer tint matches the Perfect Explainer hero
+	   widget (user review 2026-11-02). Text/borders keep --color-model. */
+	--color-model-soft: color-mix(in srgb, var(--color-model) 62%, white);
 	--color-positive: #047857; /* emerald — highlighted/honest/correct — ~5.2:1 on bg */
 	--color-negative: #c2410c; /* orange — highlighted/misleading/wrong — ~4.9:1 on bg */
 	--color-neutral: #726e63; /* warm gray — unimportant */
@@ -73,7 +78,7 @@
 	 * keeps a dedicated blue since --color-link no longer carries one.
 	 */
 	--dim-coherence: var(--color-focus); /* amber-brown — explanation vs. itself */
-	--dim-validity: var(--color-model); /* violet — explanation vs. ground truth */
+	--dim-validity: #0e6e7c; /* teal — explanation vs. ground truth — ~5.8:1 on bg (was --color-model, too easily read as the site's primary/brand accent — user review 2026-11-02) */
 	--dim-faithfulness: #1d4ed8; /* blue — explanation vs. model — ~6.7:1 on bg */
 
 	/* ---- Ambient background glows ----

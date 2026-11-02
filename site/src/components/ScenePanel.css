@@ -42,7 +42,9 @@
 	transition: fill var(--duration-normal) var(--ease-out);
 }
 
-/* Background used/highlighted → tint the whole sky (paper-style). */
+/* Background used/highlighted → tint the whole sky (paper-style).
+   A diluted mix (not the solid accent) keeps a full-panel wash from
+   reading as "heavy" (user review 2026-11-02). */
 .sky.feat-used {
 	fill: color-mix(in srgb, var(--color-model) 30%, var(--color-bg-overlay));
 }
@@ -73,7 +75,7 @@
    The state class sits ON the <g class="moon"> element (compound selector
    `.moon.feat-x`), styling the .moon-disc inside it. */
 .moon.feat-used .moon-disc {
-	fill: var(--color-model);
+	fill: var(--color-model-soft);
 	opacity: 1;
 }
 
@@ -114,7 +116,7 @@
 }
 
 .wolf.feat-used {
-	background-color: var(--color-model);
+	background-color: var(--color-model-soft);
 	opacity: 1;
 }
 
