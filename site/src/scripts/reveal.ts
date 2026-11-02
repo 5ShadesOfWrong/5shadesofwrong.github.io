@@ -44,6 +44,19 @@ function init(): void {
 				el.style.transitionDelay = `${delay * 110}ms`;
 				el.classList.add(REVEALED_CLASS);
 				obs.unobserve(el); // reveal once; never re-hide
+
+				// Clear the inline delay once the reveal transition finishes —
+				// otherwise it lingers and also delays unrelated transitions on
+				// the same element (e.g. hover effects), making them feel
+				// sluggish long after the reveal itself is done (user review
+				// 2026-11-02).
+				el.addEventListener(
+					'transitionend',
+					() => {
+						el.style.transitionDelay = '';
+					},
+					{ once: true }
+				);
 			}
 		},
 		{ rootMargin: '0px 0px -15% 0px', threshold: 0.05 }

@@ -102,28 +102,18 @@
 	}
 
 	/* ---- Perfect Explainer as a greyed backdrop (user review 2026-10-28) ----
-	   A guided step-through on the right half of the hero: question above the
+	   A guided step-through alongside the headline: question above the
 	   scene, caption below, arrow button to advance. The SCENE melts into the
 	   page background — no box margins, sky/ground blend into the page color
-	   (just distinguishable) — while texts and arrow keep full color. */
+	   (just distinguishable) — while texts and arrow keep full color.
+	   Laid out as a real grid column (not absolute positioning) so it never
+	   overlaps the text and the text column keeps the SAME left edge as
+	   every other section's .container (user bug report 2026-11-02 — the
+	   old position:absolute + translateX(-5.5rem) hack shifted the whole
+	   headline left of where every other section starts). See
+	   .landing-layout below for the grid that places it. */
 	.hero-backdrop {
-		position: absolute;
-		right: 12%; /* shifted left: clears the right page margin (user review 2026-10-28) */
-		top: 50%;
-		transform: translateY(-50%);
-		width: min(34rem, 40vw);
-		z-index: 0;
-	}
-
-	/* The scene melts into the page: no border, no rounded box, no grayscale
-	   filter. The SKY is hidden entirely — the perfect explainer's background
-	   is not highlighted, so there is no box, just wolf + moon + ground. */
-	.hero-backdrop {
-		/* Above the extended ground strip AND above the text container's box.
-		   The container is a full-width block that overlaps the backdrop
-		   horizontally; with equal z-index it paints on top and its transparent
-		   box swallows clicks on the switcher buttons (user bug 2026-11-02).
-		   Raising the backdrop keeps the buttons fully clickable. */
+		width: 100%;
 		z-index: 2;
 	}
 
@@ -228,47 +218,50 @@
 	}
 
 	/* The section already stacks content above its ::before tint; keep the
-	   text clearly above the watermark. The whole text block is shifted LEFT
-	   (user review 2026-10-28) to match the image's new position — padding
-	   alone could not move the left-aligned text, so translate it.
-	   NOTE: the shift only applies on WIDE screens — on notebook widths it
-	   pushed the headline off-screen (user bug report 2026-10-29). */
-	.landing > .container {
+	   text and backdrop clearly above the watermark. */
+	.landing-layout {
 		position: relative;
 		z-index: 1;
 	}
 
-	@media (min-width: 1400px) {
-		.landing > .container {
-			transform: translateX(-5.5rem);
+	/* ---- Wide screens: text column + backdrop column, side by side ----
+	   A real grid instead of absolute-positioning the backdrop over the
+	   text: the backdrop gets its own column, so it can never overlap the
+	   copy, and the copy column keeps the exact same left edge as every
+	   other section's .container (user bug report 2026-11-02). DOM order
+	   stays "backdrop, then copy" (so it stacks ABOVE the copy on narrow
+	   screens below), but grid-column/grid-row place them side by side
+	   here regardless of source order. */
+	@media (min-width: 1200px) {
+		.landing-layout {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, min(34rem, 40vw));
+			align-items: center;
+			column-gap: var(--space-8);
+		}
+
+		.landing-layout .hero-backdrop {
+			grid-column: 2;
+			grid-row: 1;
+		}
+
+		.landing-layout .landing-copy {
+			grid-column: 1;
+			grid-row: 1;
+			min-width: 0;
 		}
 	}
 
-	/* Notebook widths: the backdrop would cover the text — move it below
-	   the copy (same stacking the mobile layout uses). */
+	/* Narrow screens: the backdrop would cover the text — stack it above
+	   the copy instead (grid above only applies at 1200px+). */
 	@media (max-width: 1199px) {
 		.hero-backdrop {
-			position: static;
-			transform: none;
 			width: min(30rem, 100%);
-			margin: var(--space-8) auto 0;
+			margin: var(--space-8) auto var(--space-8);
 		}
 
 		.landing {
 			min-height: 0;
 			padding-top: var(--space-12);
-		}
-	}
-
-	/* Notebook-but-not-mobile range: shrink the backdrop and the chip row
-	   so the two columns never overlap (user bug report 2026-10-29). */
-	@media (min-width: 1200px) and (max-width: 1366px) {
-		.hero-backdrop {
-			right: 6%;
-			width: min(28rem, 30vw);
-		}
-
-		.shades {
-			max-width: 40rem;
 		}
 	}

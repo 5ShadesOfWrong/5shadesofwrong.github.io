@@ -1,27 +1,34 @@
 /* Styles for PipelineFlow.astro — extracted per review 2026-10-26 */
 
-	.flow {
-		margin: 0;
-		display: grid;
-		/* The middle track is capped so the callout boxes get the leftover
+.flow {
+  margin: 0;
+  display: grid;
+  /* The middle track is capped so the callout boxes get the leftover
 		   width — otherwise the greedy 1fr track absorbs all extra space and
 		   the callouts stay at their minimum, making long labels like
 		   "Functioning/Behavior:" wrap into many cramped lines (user review
 		   2026-11-02). */
-		grid-template-columns: minmax(16rem, 20rem) minmax(0, 34rem) minmax(16rem, 20rem);
-		gap: var(--space-6);
-		align-items: center;
-	}
+  grid-template-columns: minmax(16rem, 20rem) minmax(0, 34rem) minmax(
+      16rem,
+      20rem
+    );
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: center;
+}
 
-	/* On large screens the wider container lets the callout boxes grow too
+/* On large screens the wider container lets the callout boxes grow too
 	   (user review 2026-11-02). */
-	@media (min-width: 1600px) {
-		.flow {
-			grid-template-columns: minmax(18rem, 24rem) minmax(0, 38rem) minmax(18rem, 24rem);
-		}
-	}
+@media (min-width: 1600px) {
+  .flow {
+    grid-template-columns: minmax(18rem, 24rem) minmax(0, 38rem) minmax(
+        18rem,
+        24rem
+      );
+  }
+}
 
-	/* Notebook widths: the fixed callouts + 9rem arrows overflow
+/* Notebook widths: the fixed callouts + 9rem arrows overflow
 	   under the nav rail (user bug report 2026-10-29). Let the callouts
 	   shrink and tighten the arrows so the row always fits.
 	   NOTE: the .arrow/.icon overrides live further down, AFTER the base
@@ -36,323 +43,326 @@
 	   already be shrunk anywhere under 1600px — a gap from 1360px to
 	   1599px was previously left at full arrow width and overflowed into
 	   the callout boxes (user bug report 2026-11-02, second report). */
-	@media (max-width: 1599px) {
-		.flow {
-			/* The middle track's lower bound must not be 0 — its real
+@media (max-width: 1599px) {
+  .flow {
+    /* The middle track's lower bound must not be 0 — its real
 			   content (3 nodes + 2 shrunk arrows + gaps) needs ~27rem, so
 			   letting it shrink to 0 let the greedy outer callout columns
 			   (grown to their 16rem max) starve it of space, overflowing
 			   the "3. Faithfulness" sticker into the callout box next to
 			   it between roughly 951px and 1035px (user bug report
 			   2026-11-02, third report). */
-			grid-template-columns: minmax(12rem, 16rem) minmax(27rem, 30rem) minmax(12rem, 16rem);
-			gap: var(--space-4);
-		}
-	}
+    grid-template-columns: minmax(12rem, 16rem) minmax(27rem, 30rem) minmax(
+        12rem,
+        16rem
+      );
+    gap: var(--space-4);
+  }
+}
 
-	/* ---- Callout boxes (numbered, color-coded like the paper) ---- */
-	.callout {
-		background: var(--color-bg-raised);
-		border: 2px solid var(--color-border);
-		border-radius: var(--radius-md);
-		/* Generous padding so the border breathes around the text (user review:
+/* ---- Callout boxes (numbered, color-coded like the paper) ---- */
+.callout {
+  background: var(--color-bg-raised);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  /* Generous padding so the border breathes around the text (user review:
 		   the box lines sat too close to the text). */
-		padding: var(--space-6);
-		font-size: var(--text-base);
-	}
+  padding: var(--space-6);
+  font-size: var(--text-base);
+}
 
-	.callout h3 {
-		margin: 0 0 var(--space-2);
-		font-family: var(--font-body);
-		font-size: var(--text-base);
-		font-weight: 700;
-	}
+.callout h3 {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 700;
+}
 
-	.callout ul {
-		margin: 0;
-		padding-left: var(--space-4);
-		display: grid;
-		gap: var(--space-2);
-		color: var(--color-text-muted);
-	}
+.callout ul {
+  margin: 0;
+  padding-left: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
 
-	.callout p {
-		margin: 0;
-		color: var(--color-text-muted);
-	}
+.callout p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
 
-	.callout strong {
-		color: var(--color-text);
-	}
+.callout strong {
+  color: var(--color-text);
+}
 
-	.callout-context {
-		width: 100%;
-	}
+.callout-context {
+  width: 100%;
+}
 
-	/* Stacks "Read the context" + "What the explainee sees" and forces
+/* Stacks "Read the context" + "What the explainee sees" and forces
 	   them to share a width (the widest child's natural content width)
 	   via the fit-content/100% pairing (user review 2026-10-29). */
-	.callout-stack {
-		grid-column: 2;
-		grid-row: 1;
-		justify-self: center;
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
-		gap: var(--space-4);
-		width: fit-content;
-		max-width: 100%;
-		margin-bottom: var(--space-8);
-	}
+.callout-stack {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-4);
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: var(--space-8);
+}
 
-	.callout-seen {
-		width: 100%;
-		/* Explanation accent: gold (user review 2026-10-28) — distinct from
+.callout-seen {
+  width: 100%;
+  /* Explanation accent: gold (user review 2026-10-28) — distinct from
 		   the purple/blue nodes and no longer green. */
-		border-color: var(--color-focus);
-	}
+  border-color: var(--color-focus);
+}
 
-	.callout-seen h3 {
-		color: var(--color-focus);
-	}
+.callout-seen h3 {
+  color: var(--color-focus);
+}
 
-	.callout-truth {
-		grid-column: 1;
-		grid-row: 2;
-		/* Matches the Validity sticker/dimension color (user review 2026-11-02) —
+.callout-truth {
+  grid-column: 1;
+  grid-row: 2;
+  /* Matches the Validity sticker/dimension color (user review 2026-11-02) —
 		   was --color-model, which is the site's primary/brand accent and
 		   read as too prominent for a single dimension callout. */
-		border-color: var(--dim-validity);
-		/* Stretch to match .callout-behavior's height instead of the row's
+  border-color: var(--dim-validity);
+  /* Stretch to match .callout-behavior's height instead of the row's
 		   default align-items: center, which let each box keep its own
 		   (shorter) content height — the Faithfulness box has more text
 		   and so was noticeably taller, making the two side callouts read
 		   as different shapes (user bug report 2026-11-02). */
-		align-self: stretch;
-	}
+  align-self: stretch;
+}
 
-	.callout-truth h3 {
-		color: var(--dim-validity);
-	}
+.callout-truth h3 {
+  color: var(--dim-validity);
+}
 
-	.callout-behavior {
-		grid-column: 3;
-		grid-row: 2;
-		/* Matches the Faithfulness sticker/dimension color (user review
+.callout-behavior {
+  grid-column: 3;
+  grid-row: 2;
+  /* Matches the Faithfulness sticker/dimension color (user review
 		   2026-11-02) — was --color-link (near-black), which didn't match
 		   the blue "3. Faithfulness" sticker on the arrow. */
-		border-color: var(--dim-faithfulness);
-		/* See .callout-truth — stretch so both side callouts share the
+  border-color: var(--dim-faithfulness);
+  /* See .callout-truth — stretch so both side callouts share the
 		   row's full height instead of each keeping their own content
 		   height (user bug report 2026-11-02). */
-		align-self: stretch;
-	}
+  align-self: stretch;
+}
 
-	.callout-behavior h3 {
-		color: var(--dim-faithfulness);
-	}
+.callout-behavior h3 {
+  color: var(--dim-faithfulness);
+}
 
-	/* ---- Central flow ---- */
-	.track {
-		grid-column: 2;
-		grid-row: 2;
-		display: flex;
-		align-items: center;
-		gap: var(--space-4);
-	}
+/* ---- Central flow ---- */
+.track {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
 
-	.node {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--space-2);
-		text-align: center;
-	}
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
 
-	/* The Coherence sticker + loop sit above the Explanation node's icon.
+/* The Coherence sticker + loop sit above the Explanation node's icon.
 	   They're taken out of flow (absolutely positioned) so the flex item's
 	   own box stays the same height as the Ground Truth/AI Model nodes —
 	   otherwise the extra height above pushed the chart icon down and out
 	   of vertical alignment with the other two icons (user review
 	   2026-11-02). */
-	.node-chart {
-		position: relative;
-	}
+.node-chart {
+  position: relative;
+}
 
-	.node-chart-topper {
-		position: absolute;
-		bottom: 100%;
-		left: 50%;
-		transform: translateX(-50%);
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--space-2);
-		margin-bottom: var(--space-2);
-	}
+.node-chart-topper {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
 
-	.icon {
-		width: 76px;
-		height: 76px;
-		fill: none;
-		stroke: var(--color-text);
-		stroke-width: 2;
-	}
+.icon {
+  width: 76px;
+  height: 76px;
+  fill: none;
+  stroke: var(--color-text);
+  stroke-width: 2;
+}
 
-	.icon .bar {
-		fill: var(--color-text);
-		stroke: none;
-	}
+.icon .bar {
+  fill: var(--color-text);
+  stroke: none;
+}
 
-	.chip-text {
-		fill: var(--color-text);
-		stroke: none;
-		font-family: var(--font-mono);
-		font-size: 16px;
-		font-weight: 700;
-	}
+.chip-text {
+  fill: var(--color-text);
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+}
 
-	.node-label {
-		font-family: var(--font-display);
-		font-size: var(--text-base);
-		color: var(--color-text);
-		max-width: 8rem;
-	}
+.node-label {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  max-width: 8rem;
+}
 
-	.arrow {
-		flex: 1;
-		min-width: 9rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--space-1);
-	}
+.arrow {
+  flex: 1;
+  min-width: 9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
 
-	.arrow-name {
-		font-size: var(--text-xs);
-		color: var(--color-text-muted);
-		text-align: center;
-	}
+.arrow-name {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+}
 
-	.line {
-		width: 100%;
-		height: 14px;
-	}
+.line {
+  width: 100%;
+  height: 14px;
+}
 
-	.line .shaft {
-		stroke: var(--color-text-muted);
-		stroke-width: 2;
-	}
+.line .shaft {
+  stroke: var(--color-text-muted);
+  stroke-width: 2;
+}
 
-	.line .head {
-		fill: var(--color-text-muted);
-	}
+.line .head {
+  fill: var(--color-text-muted);
+}
 
-	/* ---- Lightning stickers ---- */
-	.sticker {
-		display: inline-flex;
-		align-items: center;
-		gap: 4px;
-		font-weight: 700;
-		font-size: var(--text-sm);
-		white-space: nowrap;
-	}
+/* ---- Lightning stickers ---- */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
 
-	.bolt {
-		width: 12px;
-		height: 16px;
-		fill: currentColor;
-		flex: none;
-	}
+.bolt {
+  width: 12px;
+  height: 16px;
+  fill: currentColor;
+  flex: none;
+}
 
-	/* Dimension stickers use the dedicated Axis-A dimension tokens (user review
+/* Dimension stickers use the dedicated Axis-A dimension tokens (user review
 	   2026-10-29) — same fixed mapping as PipelineDiagram/AssessmentWorkflow. */
-	.sticker-coherence {
-		color: var(--dim-coherence);
-	}
+.sticker-coherence {
+  color: var(--dim-coherence);
+}
 
-	.sticker-validity {
-		color: var(--dim-validity);
-	}
+.sticker-validity {
+  color: var(--dim-validity);
+}
 
-	.sticker-faithfulness {
-		color: var(--dim-faithfulness);
-	}
+.sticker-faithfulness {
+  color: var(--dim-faithfulness);
+}
 
-	/* The self-loop arrow sits below the Coherence label, pointing at the
+/* The self-loop arrow sits below the Coherence label, pointing at the
 	   Explanation node it loops on — sized up from the inline bolt/text row
 	   so it reads as its own diagram element, not a tiny inline glyph (user
 	   review 2026-11-02). Neutral color, like the diagram's straight arrows,
 	   since it's part of the flow rather than the dimension indicator. */
-	.loop {
-		width: 28px;
-		height: 28px;
-		color: var(--color-text-muted);
-	}
+.loop {
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-muted);
+}
 
-	.loop path {
-		fill: none;
-		stroke: currentColor;
-		stroke-width: 2;
-	}
+.loop path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
 
-	.loop polygon {
-		fill: currentColor;
-	}
+.loop polygon {
+  fill: currentColor;
+}
 
-	/* Notebook widths: shrink the arrows/icons (placed after the base
+/* Notebook widths: shrink the arrows/icons (placed after the base
 	   .arrow/.icon rules above so this override actually wins — see note
 	   near the .flow override near the top of this file). Breakpoint
 	   matches the .flow override above (1599px, not 1360px) — see that
 	   comment for why. */
-	@media (max-width: 1599px) {
-		.arrow {
-			min-width: 6rem;
-		}
+@media (max-width: 1599px) {
+  .arrow {
+    min-width: 6rem;
+  }
 
-		.icon {
-			width: 60px;
-			height: 60px;
-		}
-	}
+  .icon {
+    width: 60px;
+    height: 60px;
+  }
+}
 
-	/* ---- Mobile: stack the boxes, wrap the flow ---- */
-	@media (max-width: 950px) {
-		.flow {
-			grid-template-columns: 1fr;
-		}
+/* ---- Mobile: stack the boxes, wrap the flow ---- */
+@media (max-width: 950px) {
+  .flow {
+    grid-template-columns: 1fr;
+  }
 
-		.callout-stack {
-			grid-column: 1;
-			grid-row: 1;
-			margin-bottom: 0;
-		}
+  .callout-stack {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 0;
+  }
 
-		.track {
-			grid-column: 1;
-			grid-row: 2;
-			flex-wrap: wrap;
-			justify-content: center;
-			/* The Coherence sticker + loop arrow (.node-chart-topper) are
+  .track {
+    grid-column: 1;
+    grid-row: 2;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* The Coherence sticker + loop arrow (.node-chart-topper) are
 			   absolutely positioned above the Explanation icon, so the
 			   track's own box doesn't reserve space for them. On desktop
 			   the callout-stack's margin-bottom left enough clearance, but
 			   mobile's margin-bottom:0 let the topper overlap the callout
 			   box above it (user bug report 2026-11-02). */
-			margin-top: 4.5rem;
-		}
+    margin-top: 4.5rem;
+  }
 
-		.callout-truth {
-			grid-column: 1;
-			grid-row: 3;
-		}
+  .callout-truth {
+    grid-column: 1;
+    grid-row: 3;
+  }
 
-		.callout-behavior {
-			grid-column: 1;
-			grid-row: 4;
-		}
+  .callout-behavior {
+    grid-column: 1;
+    grid-row: 4;
+  }
 
-		.arrow {
-			min-width: 5rem;
-		}
-	}
+  .arrow {
+    min-width: 5rem;
+  }
+}

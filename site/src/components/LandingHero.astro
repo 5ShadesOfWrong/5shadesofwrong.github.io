@@ -33,6 +33,7 @@ const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Arc
 ---
 
 <section id="landing" class="section landing" aria-labelledby="landing-title">
+	<div class="container landing-layout">
 	{
 		perfect?.scene && (
 			<div class="hero-backdrop">
@@ -97,7 +98,7 @@ const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Arc
 			</div>
 		)
 	}
-	<div class="container">
+	<div class="landing-copy">
 		<h1 id="landing-title" data-reveal data-reveal-delay="1">{site.landing.title}</h1>
 		<p class="lede" data-reveal data-reveal-delay="2">{site.landing.subtitle}</p>
 
@@ -120,6 +121,7 @@ const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Arc
 		</ul>
 
 		<p class="scroll-hint" data-reveal data-reveal-delay="9">Scroll to explore ↓</p>
+	</div>
 	</div>
 </section>
 
