@@ -229,9 +229,10 @@
 	   text: the backdrop gets its own column, so it can never overlap the
 	   copy, and the copy column keeps the exact same left edge as every
 	   other section's .container (user bug report 2026-11-02). DOM order
-	   stays "backdrop, then copy" (so it stacks ABOVE the copy on narrow
-	   screens below), but grid-column/grid-row place them side by side
-	   here regardless of source order. */
+	   stays "backdrop, then copy", but grid-column/grid-row place them side
+	   by side here regardless of source order; below 1200px, the narrow
+	   breakpoint further below uses flexbox `order` to visually put the
+	   title first and the backdrop second. */
 	@media (min-width: 1200px) {
 		.landing-layout {
 			display: grid;
@@ -252,9 +253,27 @@
 		}
 	}
 
-	/* Narrow screens: the backdrop would cover the text — stack it above
-	   the copy instead (grid above only applies at 1200px+). */
+	/* Narrow screens: not enough width for the side-by-side grid above, so
+	   stack the two blocks vertically instead. DOM order stays "backdrop,
+	   then copy" (markup/accessibility order is unchanged), but flexbox
+	   `order` visually places the title FIRST and the wolf backdrop below
+	   it — the title must stay the first thing readers/scanners meet when
+	   space is tight (user bug report 2026-11-03: the wolf backdrop was
+	   rendering above/over the "5 Shades" title at small widths). */
 	@media (max-width: 1199px) {
+		.landing-layout {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.landing-layout .landing-copy {
+			order: 1;
+		}
+
+		.landing-layout .hero-backdrop {
+			order: 2;
+		}
+
 		.hero-backdrop {
 			width: min(30rem, 100%);
 			margin: var(--space-8) auto var(--space-8);
