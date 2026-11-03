@@ -1,0 +1,94 @@
+---
+import './ArchetypeGallery.css';
+import archetypes from '../data/archetypes.json';
+import type { Archetype, ArchetypesData } from '../schemas/schemas';
+
+
+const data = archetypes as unknown as ArchetypesData;
+
+const list = data.archetypes;
+
+const legend = data.legend;
+
+const verdictChip = (ok: boolean) => (ok ? 'yes' : 'no');
+---
+/**
+ * ArchetypeGallery.astro — §3 The 5(0) Shades of Wrong (DESIGN_PLAN §4)
+ * -------------------------------------------------------------------
+ * Grid of the six archetypes (a)–(f) from archetypes.json, each rendered as
+ * a card with the paper's husky/wolf mini-story and C/V/F verdict chips.
+ * Includes the paper's color legend (purple = used, green/red = highlighted).
+ *
+ * Visuals: abstract placeholder glyph per archetype (Phase 3 can replace with
+ * recreated husky/wolf SVGs — open decision #3).
+ *
+ * Security: typed JSON data, auto-escaped.
+ */
+
+
+
+<section id="archetypes" class="section" aria-labelledby="archetypes-title">
+	<div class="container">
+		<h2 id="archetypes-title">The 5(0) Shades of Wrong</h2>
+		<p class="intro">
+			Combining the three dimensions yields six archetypes: the perfect explainer
+			(a) — and the five shades of wrong (b–f).
+		</p>
+
+		<ul class="legend" aria-label="Color legend from the paper">
+			{
+				Object.values(legend).map((item) => (
+					<li>
+						<span class="swatch" style={`background: ${item.color}`} aria-hidden="true" />
+						{item.label}
+					</li>
+				))
+			}
+		</ul>
+
+		<div class="gallery">
+			{
+				list.map((a) => (
+					<article class:list={['archetype', { correct: a.verdict === 'correct' }]} id={`archetype-${a.id}`}>
+						<header>
+							<span class="letter" aria-hidden="true">({a.letter})</span>
+							<h3>{a.name}</h3>
+						</header>
+
+						<div class="story" aria-hidden="true">
+							<div class="frame">
+								<span class="moon" />
+								<span class="ground" />
+							</div>
+							<p class="prediction">
+								Prediction: <strong>{a.prediction}</strong>
+							</p>
+							<p class="explanation">“{a.explanation}”</p>
+						</div>
+
+						<p class="summary">{a.summary}</p>
+
+						<dl class="facts">
+							<div>
+								<dt>Model actually used</dt>
+								<dd>{a.modelUsed}</dd>
+							</div>
+							<div>
+								<dt>Explanation highlighted</dt>
+								<dd>{a.highlighted}</dd>
+							</div>
+						</dl>
+
+						<ul class="chips" aria-label={`${a.name} verdicts`}>
+							<li class:list={[verdictChip(a.coherent)]}>Coherent</li>
+							<li class:list={[verdictChip(a.valid)]}>Valid</li>
+							<li class:list={[verdictChip(a.faithful)]}>Faithful</li>
+						</ul>
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+

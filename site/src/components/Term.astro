@@ -1,0 +1,31 @@
+---
+/**
+ * Term.astro — inline term with a concise hover tooltip (user review 2026-10-26)
+ * -------------------------------------------------------------------------------
+ * Renders a technical term (e.g. "Coherent", "Valid", "Faithful") with a
+ * one-line explanation on hover/focus — for visitors who need a quick
+ * refresher without scrolling back to the Three Dimensions section.
+ *
+ * Implementation: native CSS-only tooltip (data-term attribute + ::after),
+ * keyboard-accessible via tabindex. No JS, no dynamic HTML.
+ *
+ * Security: term + definition are static strings from typed JSON data,
+ * rendered as text content (auto-escaped by Astro).
+ */
+interface Props {
+	/** The visible term, e.g. "Coherent". */
+	term: string;
+	/** The concise one-line explanation shown on hover/focus. */
+	definition: string;
+	/** Optional color class for the term (e.g. 'yes' → green). */
+	variant?: 'yes' | 'no' | 'neutral';
+}
+
+const { term, definition, variant = 'neutral' } = Astro.props;
+---
+
+<span class:list={['term', `term-${variant}`]} tabindex="0" data-term={definition}>
+	{term}
+	<span class="term-tip" role="tooltip">{definition}</span>
+</span>
+

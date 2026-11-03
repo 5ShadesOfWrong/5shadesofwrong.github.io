@@ -1,0 +1,127 @@
+---
+import './PipelineDiagram.css';
+
+
+const { highlight = 'none', compact = false, showLabels = true, id } = Astro.props;
+
+const uid = id ?? `pd-${Math.random().toString(36).slice(2, 8)}`;
+---
+/**
+ * PipelineDiagram.astro — the page's visual anchor (v2, user review 2026-10-19)
+ * ---------------------------------------------------------------------------
+ * The paper's pipeline, redrawn as a clean horizontal flow with NO overlapping
+ * edges (the v1 layout had crossing curves that read as clutter):
+ *
+ *   Training Data → [AI Model] → [XAI Method] → [Explanation] → [Ground Truth]
+ *
+ * The three dimension relationships are drawn as short, clearly separated arcs
+ * ABOVE the pipeline, each with its numbered chip (1/2/3):
+ *   1 Coherence    — Explanation ↔ itself (loop on the Explanation node)
+ *   2 Validity     — Explanation ↔ Ground Truth (long arc)
+ *   3 Faithfulness — Explanation ↔ AI Model (medium arc)
+ *
+ * Props:
+ *   highlight — 'none' | 'coherence' | 'validity' | 'faithfulness'
+ *   compact   — smaller variant for sticky/inline use
+ *   showLabels — captions under nodes
+ *
+ * Security: purely static SVG; no dynamic content is injected.
+ */
+interface Props {
+	highlight?: 'none' | 'coherence' | 'validity' | 'faithfulness';
+	compact?: boolean;
+	showLabels?: boolean;
+	id?: string;
+}
+
+
+// Unique id prefix so multiple instances on one page don't collide (SVG defs).
+
+<figure class:list={['pipeline', { compact, [`hl-${highlight}`]: highlight !== 'none' }]}
+	role="img"
+	aria-label="Diagram: an AI Model trained on data produces predictions; an XAI Method turns the model's behavior into an Explanation, which the explainee compares against the Ground Truth. Coherence relates the explanation to itself, validity to the ground truth, faithfulness to the model.">
+	<svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+		<defs>
+			<marker id={`${uid}-arrow`} viewBox="0 0 10 10" refX="9" refY="5"
+				markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+				<path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head" />
+			</marker>
+		</defs>
+
+		<!-- ================= Edges (drawn first, nodes on top) ================= -->
+		<!-- Main pipeline: Data → Model → XAI → Explanation → Ground Truth -->
+		<path class="edge" d="M 150 170 L 196 170" marker-end={`url(#${uid}-arrow)`} />
+		<path class="edge" d="M 316 170 L 362 170" marker-end={`url(#${uid}-arrow)`} />
+		<path class="edge" d="M 482 170 L 528 170" marker-end={`url(#${uid}-arrow)`} />
+		<path class="edge" d="M 648 170 L 616 170" marker-end={`url(#${uid}-arrow)`} />
+
+		<!-- Dimension arcs above the pipeline (short, separated, never crossing) -->
+		<!-- 2 Validity: Explanation ↔ Ground Truth (long arc) -->
+		<path class="edge edge-validity" d="M 590 128 C 590 84 660 84 660 128" marker-end={`url(#${uid}-arrow)`} />
+		<!-- 3 Faithfulness: Explanation ↔ AI Model (medium arc) -->
+		<path class="edge edge-faithfulness" d="M 560 128 C 560 56 256 56 256 128" marker-end={`url(#${uid}-arrow)`} />
+		<!-- 1 Coherence: Explanation ↔ itself (self-loop) -->
+		<path class="edge edge-coherence" d="M 530 128 C 530 100 560 100 560 128" marker-end={`url(#${uid}-arrow)`} />
+
+		<!-- ================= Nodes ================= -->
+		<!-- Training Data (small, muted — context, not a dimension target) -->
+		<g class="node node-data">
+			<rect x="30" y="145" width="120" height="50" rx="10" />
+			<text x="90" y="175" text-anchor="middle" class="subtext">Training Data</text>
+		</g>
+
+		<!-- AI Model -->
+		<g class="node node-model">
+			<rect x="200" y="140" width="116" height="60" rx="12" />
+			<text x="258" y="167" text-anchor="middle">AI Model</text>
+			<text x="258" y="185" text-anchor="middle" class="subtext">predicts</text>
+		</g>
+
+		<!-- XAI Method -->
+		<g class="node node-xai">
+			<rect x="366" y="140" width="116" height="60" rx="12" />
+			<text x="424" y="167" text-anchor="middle">XAI Method</text>
+			<text x="424" y="185" text-anchor="middle" class="subtext">explains</text>
+		</g>
+
+		<!-- Explanation (the dimension hub) -->
+		<g class="node node-explanation">
+			<rect x="532" y="140" width="116" height="60" rx="12" />
+			<text x="590" y="167" text-anchor="middle">Explanation</text>
+			<text x="590" y="185" text-anchor="middle" class="subtext">what you see</text>
+		</g>
+
+		<!-- Ground Truth -->
+		<g class="node node-groundtruth">
+			<rect x="620" y="140" width="86" height="60" rx="12" />
+			<text x="663" y="167" text-anchor="middle" class="small">Ground</text>
+			<text x="663" y="185" text-anchor="middle" class="small">Truth</text>
+		</g>
+
+		<!-- ================= Dimension chips (1/2/3) ================= -->
+		<g class="badge badge-coherence">
+			<circle cx="545" cy="96" r="13" />
+			<text x="545" y="101" text-anchor="middle">1</text>
+		</g>
+		<g class="badge badge-validity">
+			<circle cx="625" cy="70" r="13" />
+			<text x="625" y="75" text-anchor="middle">2</text>
+		</g>
+		<g class="badge badge-faithfulness">
+			<circle cx="408" cy="42" r="13" />
+			<text x="408" y="47" text-anchor="middle">3</text>
+		</g>
+	</svg>
+
+	{
+		showLabels && (
+			<figcaption class="legend">
+				<span class="legend-item"><span class="chip-dot chip-1" aria-hidden="true">1</span> Coherence — explanation vs. itself</span>
+				<span class="legend-item"><span class="chip-dot chip-2" aria-hidden="true">2</span> Validity — explanation vs. ground truth</span>
+				<span class="legend-item"><span class="chip-dot chip-3" aria-hidden="true">3</span> Faithfulness — explanation vs. model</span>
+			</figcaption>
+		)
+	}
+</figure>
+
+

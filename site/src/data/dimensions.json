@@ -1,0 +1,140 @@
+{
+	"$comment": "dimensions.json — the three wrongness dimensions. Source: paper p.3–8 + the dimensions/examples table (credit-scoring running example). Structure per user review 2026-10-29: shared positive baseline, per-dimension baseline rationale, negative examples (collapsible).",
+	"positiveBaseline": {
+		"title": "Positive baseline",
+		"explanation": "The loan applicant was denied because their income is low and debt-to-income ratio is high, exceeding the default risk threshold.",
+		"context": "Running example: an AI-based credit scoring system."
+	},
+	"dimensions": [
+		{
+			"id": "coherence",
+			"number": 1,
+			"name": "Coherence",
+			"relationship": "Explanation ↔ itself",
+			"tooltip": "The explanation is logically consistent with itself — no contradictions inside.",
+			"definition": "Whether the explanation maintains a consistent and logical internal structure. A lack of coherence means the internal structure is logically conflicting, contradictory, or structurally impossible — independent of whether premises and conclusions are valid.",
+			"baselineWhy": "The explanation forms a logically consistent syllogism. It would be coherent even if the premises were false and the applicant would have repaid their loan.",
+			"goodExample": {
+				"setup": "A movie recommender suggests “Inception”.",
+				"explanation": "“You rated ‘Interstellar’ 5 stars, and both films are directed by Christopher Nolan.”",
+				"why": "Coherent even if you end up not enjoying “Inception” — the internal logic holds."
+			},
+			"flawedExample": {
+				"setup": "A credit-scoring model explains its decision for one applicant.",
+				"explanation": "“Higher income boosted the creditworthiness score (+30) and dropped it (−20) — for the exact same instance.”",
+				"why": "The explanation contradicts itself: the same feature cannot simultaneously raise and lower the score. This is incoherence."
+			},
+			"facets": [
+				{
+					"name": "Rule contradiction",
+					"example": "A rule-based explainer justifies the rejection with mutually exclusive conditions (“income < $30k and income > $80k”)."
+				},
+				{
+					"name": "Counterfactual contradiction",
+					"example": "A counterfactual explanation requires the applicant to simultaneously increase and decrease their requested loan amount."
+				},
+				{
+					"name": "Stochastic instability",
+					"example": "A stochastic local feature attribution method reports income simultaneously boosts (+30) and lowers (−20) credit score across runs."
+				},
+				{
+					"name": "Non-sequitur examples",
+					"example": "An example-based method justifies the rejection using similarities with three images from a conflicting class (“accepted”)."
+				},
+				{
+					"name": "Semantic non-sequitur",
+					"example": "An LLM-generated explanation for the rejection states: “Your loan has been approved because our evaluation shows severe insolvency and a high probability of imminent default.”"
+				}
+			],
+			"footnote": "An explanation is already incoherent if it corresponds to a single facet. It can — but does not need to — correspond to multiple facets.",
+			"exampleHeaders": {
+				"good": "Coherent",
+				"flawed": "Incoherent"
+			}
+		},
+		{
+			"id": "validity",
+			"number": 2,
+			"name": "Validity",
+			"relationship": "Explanation ↔ ground truth",
+			"tooltip": "The explanation matches the real-world facts — what is actually true.",
+			"definition": "Whether the explanation aligns with the real-world ground truth the model seeks to reflect — both the factual premises and the ground-truth outcomes. A lack of validity means the explanation asserts factually incorrect claims and/or misrepresents actual patterns or causal relations.",
+			"baselineWhy": "The explanation is only valid given that the data is correct, these features predict empirically observable real-world default risk, and the applicant would have defaulted. It would still be valid if this is not the logic the model actually applied.",
+			"goodExample": {
+				"setup": "An email filter correctly flags a message as spam.",
+				"explanation": "“Flagged because it was sent from an unknown sender, contains 12 suspicious links, and asks for your banking passwords.”",
+				"why": "Every claim matches the real-world facts of the message."
+			},
+			"flawedExample": {
+				"setup": "A weather forecast correctly predicts rain today.",
+				"explanation": "“Rain is expected because of low humidity.”",
+				"why": "The prediction is right, but the stated cause is factually wrong — an invalid premise."
+			},
+			"facets": [
+				{
+					"name": "Invalid feature values",
+					"example": "A local attribution-based method reports a bank balance of $0, when the applicant's real-world balance is $50,000."
+				},
+				{
+					"name": "Invalid target label",
+					"example": "Any explanation plausibly justifies acceptance of the applicant even though the applicant will default."
+				},
+				{
+					"name": "Spurious proxies",
+					"example": "A local attribution-based method reports the applicant's zip code as a primary reason for rejection, even though zip code is only a demographic proxy for race rather than a causal driver of creditworthiness."
+				},
+				{
+					"name": "Invalid counterfactual",
+					"example": "A counterfactual explanation suggests to increase income by $300, but the applicant would default even with this profile."
+				}
+			],
+			"footnote": "An explanation is already invalid if it corresponds to a single facet. It can — but does not need to — correspond to multiple facets.",
+			"exampleHeaders": {
+				"good": "Valid",
+				"flawed": "Invalid"
+			}
+		},
+		{
+			"id": "faithfulness",
+			"number": 3,
+			"name": "Faithfulness",
+			"relationship": "Explanation ↔ model behavior",
+			"tooltip": "The explanation reflects how the model actually processed the input.",
+			"definition": "How well the explanation represents the true internal reasoning and mechanics of the AI model. A lack of faithfulness means the explanation is misaligned with how the model actually processed the input to reach its prediction.",
+			"baselineWhy": "The explanation is only faithful if income and debt-to-income ratio were actually the primary factors driving the classification. It would still be faithful if the applicant would have repaid their loan.",
+			"goodExample": {
+				"setup": "A spam filter assigns 90% of its internal risk weight to the phrase “claim your free prize now”.",
+				"explanation": "The feature attribution reports “claim your free prize now” as the top factor driving the spam classification.",
+				"why": "The reported driver matches the model's actual internal weighting."
+			},
+			"flawedExample": {
+				"setup": "A CV-screening model internally uses zip code as a proxy for race to reject an applicant.",
+				"explanation": "The post-hoc report lists only years of experience and education level.",
+				"why": "The decisive feature is completely omitted — an incomplete attribution."
+			},
+			"facets": [
+				{
+					"name": "Incomplete attribution",
+					"example": "A local attribution-based method lists only income and experience to justify the rejection, even though the model used zip code to reject an applicant."
+				},
+				{
+					"name": "Inverse attribution",
+					"example": "A global attribution-based method reports that lower age increases credit risk, whereas the model's internal logic uses lower age to decrease risk."
+				},
+				{
+					"name": "Ineffective counterfactual",
+					"example": "A counterfactual method suggests to switch employment status, but varying all employment status options yields the exact same model score."
+				},
+				{
+					"name": "LLM rationalization",
+					"example": "An LLM-generated explanation for the rejection states: “Your loan has been rejected because our evaluation shows severe insolvency and a high probability of imminent default.” However, probing the model's chain of reasoning reveals that it did not read in the applicant's data but researched typical reasons for rejections."
+				}
+			],
+			"footnote": "An explanation is already unfaithful if it corresponds to a single facet. It can — but does not need to — correspond to multiple facets.",
+			"exampleHeaders": {
+				"good": "Faithful",
+				"flawed": "Unfaithful"
+			}
+		}
+	]
+}

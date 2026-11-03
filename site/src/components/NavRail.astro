@@ -1,0 +1,51 @@
+---
+import './NavRail.css';
+
+/**
+ * NavRail.astro — fixed section navigation (desktop) / progress bar (mobile)
+ * --------------------------------------------------------------------------
+ * Desktop: slim right-hand rail with one dot per section; active dot follows
+ * scroll (scroll-spy in navrail.ts). Mobile: top progress bar.
+ *
+ * The section list is passed as a prop (single source of truth = index.astro
+ * registry) so the rail can never drift out of sync with the page.
+ *
+ * Accessibility: nav landmark + aria-label; dots are real links (keyboard
+ * navigable); aria-current marks the active section.
+ */
+export interface SectionRef {
+	id: string;
+	label: string;
+}
+
+interface Props {
+	sections: readonly SectionRef[];
+}
+
+const { sections } = Astro.props;
+---
+
+<nav class="navrail" aria-label="Page sections">
+	<!-- Mobile progress bar -->
+	<div class="navrail-progress" aria-hidden="true">
+		<div class="navrail-progress-fill" data-navrail-progress></div>
+	</div>
+
+	<!-- Desktop dots -->
+	<ul class="navrail-dots">
+		{
+			sections.map((section) => (
+				<li>
+					<a href={`#${section.id}`} data-navrail-dot aria-label={section.label}>
+						<span class="dot" aria-hidden="true" />
+						<span class="label">{section.label}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>
+
+
+<script src="../scripts/navrail.ts"></script>
+

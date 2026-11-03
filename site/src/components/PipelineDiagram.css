@@ -1,0 +1,193 @@
+/* Styles for PipelineDiagram.astro — extracted per review 2026-10-26 */
+
+	.pipeline {
+		margin: 0;
+	}
+
+	.pipeline svg {
+		width: 100%;
+		height: auto;
+	}
+
+	.pipeline.compact svg {
+		max-width: 26rem;
+	}
+
+	/* ---- Nodes ---- */
+	.node rect {
+		fill: var(--color-bg-raised);
+		stroke: var(--color-border);
+		stroke-width: 1.5;
+		transition: stroke var(--duration-normal) var(--ease-out),
+			fill var(--duration-normal) var(--ease-out);
+	}
+
+	.node text {
+		fill: var(--color-text);
+		font-family: var(--font-display);
+		font-size: 15px;
+	}
+
+	.node .small {
+		font-size: 13px;
+	}
+
+	.node .subtext {
+		fill: var(--color-text-muted);
+		font-family: var(--font-body);
+		font-size: 10.5px;
+	}
+
+	.node-data rect {
+		stroke-dasharray: 4 3; /* context node — visually secondary */
+	}
+
+	/* ---- Edges ---- */
+	.edge {
+		fill: none;
+		stroke: var(--color-neutral);
+		stroke-width: 1.5;
+		opacity: 0.55;
+		transition: stroke var(--duration-normal) var(--ease-out),
+			opacity var(--duration-normal) var(--ease-out);
+		/* Draw-in effect: dash pattern collapses to full line when the diagram
+		   gets .drawn (added by reveal observer via data-reveal on the wrapper). */
+		stroke-dasharray: 6 5;
+	}
+
+	.arrow-head {
+		fill: var(--color-neutral);
+		opacity: 0.55;
+		transition: fill var(--duration-normal) var(--ease-out);
+	}
+
+	/* Animated draw-in when the parent [data-reveal] element reveals */
+	:global(.reveal-in) .edge {
+		animation: edge-flow 1.4s var(--ease-out) both;
+	}
+
+	@keyframes edge-flow {
+		from {
+			stroke-dashoffset: 44;
+			opacity: 0.15;
+		}
+		to {
+			stroke-dashoffset: 0;
+			opacity: 0.55;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.reveal-in) .edge {
+			animation: none;
+		}
+	}
+
+	/* ---- Dimension badges (numbered 1/2/3 like the paper) ---- */
+	.badge circle {
+		fill: var(--color-bg-overlay);
+		stroke: var(--color-border);
+		stroke-width: 1.5;
+		transition: stroke var(--duration-normal) var(--ease-out),
+			fill var(--duration-normal) var(--ease-out);
+	}
+
+	.badge text {
+		fill: var(--color-text-muted);
+		font-family: var(--font-mono);
+		font-size: 12px;
+	}
+
+	/* ---- HTML legend under the diagram ---- */
+	.legend {
+		margin-top: var(--space-3);
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-5);
+		justify-content: center;
+	}
+
+	.legend-item {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		font-size: var(--text-xs);
+		color: var(--color-text-muted);
+	}
+
+	.chip-dot {
+		display: inline-grid;
+		place-items: center;
+		width: 1.15rem;
+		height: 1.15rem;
+		border-radius: 50%;
+		font-family: var(--font-mono);
+		font-size: 0.65rem;
+		border: 1px solid currentColor;
+	}
+
+	/* Dimension colors use the dedicated Axis-A dimension tokens (user review
+	   2026-10-29) — distinct from the Axis-B verdict tokens
+	   (--color-positive/--color-negative) used for correct/wrong chips. */
+	.chip-1 {
+		color: var(--dim-coherence);
+	}
+
+	.chip-2 {
+		color: var(--dim-validity);
+	}
+
+	.chip-3 {
+		color: var(--dim-faithfulness);
+	}
+
+	/* ---- Highlight states (one dimension at a time) ---- */
+
+	/* Coherence: self-loop on the Explanation node */
+	.hl-coherence .edge-coherence {
+		stroke: var(--dim-coherence);
+		opacity: 1;
+		stroke-width: 2.5;
+	}
+	.hl-coherence .node-explanation rect {
+		stroke: var(--dim-coherence);
+		fill: color-mix(in srgb, var(--dim-coherence) 12%, var(--color-bg-raised));
+	}
+	.hl-coherence .badge-coherence circle {
+		stroke: var(--dim-coherence);
+	}
+	.hl-coherence .badge-coherence text {
+		fill: var(--dim-coherence);
+	}
+
+	/* Validity: Explanation ↔ Ground Truth arc */
+	.hl-validity .edge-validity {
+		stroke: var(--dim-validity);
+		opacity: 1;
+		stroke-width: 2.5;
+	}
+	.hl-validity .node-groundtruth rect {
+		stroke: var(--dim-validity);
+	}
+	.hl-validity .badge-validity circle {
+		stroke: var(--dim-validity);
+	}
+	.hl-validity .badge-validity text {
+		fill: var(--dim-validity);
+	}
+
+	/* Faithfulness: Explanation ↔ AI Model arc */
+	.hl-faithfulness .edge-faithfulness {
+		stroke: var(--dim-faithfulness);
+		opacity: 1;
+		stroke-width: 2.5;
+	}
+	.hl-faithfulness .node-model rect {
+		stroke: var(--dim-faithfulness);
+	}
+	.hl-faithfulness .badge-faithfulness circle {
+		stroke: var(--dim-faithfulness);
+	}
+	.hl-faithfulness .badge-faithfulness text {
+		fill: var(--dim-faithfulness);
+	}

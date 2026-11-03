@@ -1,0 +1,51 @@
+{
+	"$comment": "scenarios.spam.json - Set B: corporate spam filter scenarios. Source: paper p.21-26. Trimmed to 3 representative scenarios per user review 2026-10-19 (full set kept in git history). Archetype field stays null pending authors' answers (open decision #4).",
+	"setId": "spam",
+	"setTitle": "Set B - Spam Filter",
+	"setIntro": "A corporate spam filter scores every inbound message between 0 and 1 and moves flagged ones to a spam folder. A marketing manager checks her inbox before a tight deadline, with no access to the filter's settings.",
+	"context": {
+		"domain": "Corporate spam filter. An AI system scores every inbound message between 0 and 1 and moves flagged ones to a spam folder.",
+		"explainee": "A marketing manager checks her inbox before a tight deadline, with no access to the filter's settings."
+	},
+	"scenarios": [
+		{
+			"id": "B1",
+			"seen": {
+				"output": "Spam with score 0.97.",
+				"explanation": "A ranked list of feature importances. Main drivers are (1) subject contains 'claim your prize' and (2) sender_domain_age = 3_days."
+			},
+			"groundTruth": {
+				"outcome": "The message is spam.",
+				"premise": "Phrases such as 'You won 500 Dollars' and recently registered domains usually indicate spam."
+			},
+			"modelBehavior": "The model detected the subject phrase 'Claim your prize!' and the sender domain being only 3 days old.",
+			"archetype": null
+		},
+		{
+			"id": "B2",
+			"seen": {
+				"output": "No spam with score 0.12.",
+				"explanation": "A natural-language rationale from an LLM: This message was delivered because it reads as routine correspondence. The tone is formal and the content makes no promotional claims."
+			},
+			"groundTruth": {
+				"outcome": "The message is a phishing mail from a blacklisted domain and should be flagged and blocked.",
+				"premise": "An unknown or blacklisted sender domain usually indicates a spam mail."
+			},
+			"modelBehavior": "The model used the recipient's history of opening mail from this address and the total number of links in the message.",
+			"archetype": null
+		},
+		{
+			"id": "B3",
+			"seen": {
+				"output": "No spam with score 0.32.",
+				"explanation": "Example-based explanation with the three most similar prior mails: (1 and 2) prior mails from the same sender; (3) a phishing mail with an entirely different topic."
+			},
+			"groundTruth": {
+				"outcome": "The message is not spam.",
+				"premise": "Messages from approved senders with a long history of correspondence should stay in the inbox."
+			},
+			"modelBehavior": "The model identified the three most similar e-mails, two of which are from approved senders, and one is an obvious fraud from a phishing domain.",
+			"archetype": null
+		}
+	]
+}

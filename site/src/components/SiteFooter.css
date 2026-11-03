@@ -1,0 +1,71 @@
+/* Styles for SiteFooter.astro — extracted per review 2026-10-26 */
+
+	.footer {
+		border-top: 1px solid var(--color-border);
+		padding-block: var(--space-16);
+	}
+
+	.footer-grid {
+		margin-top: var(--space-8);
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+		gap: var(--space-12);
+	}
+
+	/* Scoped to .footer-grid (BUGFIX 2026-11-02): this file is imported as a
+	   plain stylesheet, not an Astro <style> block, so it is never scoped
+	   automatically. A bare `h3` selector here was leaking globally and
+	   overriding every <h3> on the page — including the archetype card
+	   titles in ArchetypeViewer, which were rendering small/uppercase/faint
+	   instead of their own intended large serif style. */
+	.footer-grid h3 {
+		font-size: var(--text-sm);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--color-text-faint);
+	}
+
+	/* ---- Partner logo strip ---- */
+	/* Logos are shown exactly as authored — no filter, no card box
+	   (user review 2026-10-21: colors/text must stay untouched). */
+	.logo-strip {
+		margin-top: var(--space-8);
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--space-10, 3rem);
+	}
+
+	.logo-strip img {
+		height: 80px;
+		width: auto;
+		object-fit: contain;
+		/* Light chip behind each logo so dark logo text stays readable —
+		   tinted toward the page indigo so it blends with the theme. */
+		background: color-mix(in srgb, white 90%, var(--color-bg));
+		padding: 12px 20px;
+		border-radius: var(--radius-md);
+	}
+
+	/* ---- Citation ---- */
+	
+	.link-disabled {
+		color: var(--color-text-faint);
+	}
+
+	/* ---- Links ---- */
+	.links ul {
+		margin-top: var(--space-3);
+		padding: 0;
+		list-style: none;
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.colophon {
+		margin-top: var(--space-16);
+		padding-top: var(--space-6);
+		border-top: 1px solid var(--color-border);
+		color: var(--color-text-faint);
+		font-size: var(--text-sm);
+	}

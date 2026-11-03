@@ -1,0 +1,44 @@
+# CI — build check + security audit on every PR (dormant until repo exists)
+#
+# Keeps the project constraint "always check for vulnerabilities": npm audit
+# gates merges, and the build check catches schema/data drift early.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: site
+
+      - name: Security audit (fail on high/critical)
+        run: npm audit --audit-level=high
+        working-directory: site
+
+      - name: Validate data schemas
+        run: npx tsx src/schemas/validate.ts
+        working-directory: site
+
+      - name: Build check
+        run: npm run build
+        working-directory: site

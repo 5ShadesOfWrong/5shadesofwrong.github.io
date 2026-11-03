@@ -1,0 +1,178 @@
+/* Styles for ThreeDimensions.astro — extracted per review 2026-10-26 */
+
+	.intro {
+		margin-top: var(--space-4);
+		font-size: var(--text-lg);
+		color: var(--color-text-muted);
+		max-width: 56ch;
+	}
+
+	/* ---- Positive baseline: the shared running example (table row 1) ---- */
+	.baseline {
+		margin-top: var(--space-8);
+		padding: var(--space-6) var(--space-8);
+		background: var(--color-bg-raised);
+		border: 1px solid color-mix(in srgb, var(--color-positive) 45%, var(--color-border));
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-card);
+	}
+
+	.baseline-title {
+		margin: 0;
+		font-size: var(--text-lg);
+		color: var(--color-positive);
+	}
+
+	.baseline-quote {
+		margin: var(--space-3) 0 0;
+		font-family: var(--font-display);
+		font-size: var(--text-xl);
+		line-height: 1.4;
+	}
+
+	.baseline-context {
+		margin-top: var(--space-3);
+		font-size: var(--text-sm);
+		color: var(--color-text-faint);
+	}
+
+	/* ---- Three dimension columns (the table's three dimensions) ---- */
+	.dimension-cards {
+		margin-top: var(--space-6);
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--space-6);
+		/* `start` (not `stretch`) so a card's height is its own content plus
+		   the JS-set `min-height` below — never pulled taller just because a
+		   sibling card is taller. Grid's `stretch` would otherwise re-equalize
+		   every card's height whenever any ONE of them changed (e.g. a
+		   "More negative examples" toggle opening), making the still-collapsed
+		   cards visibly resize too (user review 2026-11-02). */
+		align-items: start;
+	}
+
+	.dimension-col {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-bg-raised);
+		/* Equal height while collapsed, set once by equalize-dimension-cards.ts
+		   from each card's natural (collapsed) height — a fixed floor, so
+		   opening one card's <details> only grows that card; the others stay
+		   pinned at this height instead of shrinking or stretching to match. */
+		min-height: var(--dimension-min-height, 0);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: var(--space-6);
+		scroll-margin-top: var(--space-8);
+	}
+
+	.dimension-head {
+		display: flex;
+		align-items: baseline;
+		gap: var(--space-4);
+	}
+
+	.dimension-number {
+		font-family: var(--font-mono);
+		font-size: var(--text-2xl);
+		color: var(--color-model);
+	}
+
+	.dimension-col h3 {
+		margin: 0;
+		font-size: var(--text-xl);
+	}
+
+	.relationship {
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+		margin-top: var(--space-1);
+	}
+
+	/* Why the positive baseline holds under this dimension (table row 2). */
+	.baseline-why {
+		margin-top: var(--space-4);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	/* ---- First negative example: shown by default in a red-bordered box
+	     (user review 2026-11-02). A tiny, self-contained "what wrong looks
+	     like" teaser; the remaining examples stay collapsible below.
+	     Red border only — the background matches the card (no tint). ---- */
+	.neg-example {
+		margin-top: var(--space-4);
+		padding: var(--space-3) var(--space-4);
+		/* True red border (user review 2026-11-02) — the semantic
+		   --color-negative is vermillion/orange, so use a clear red here. */
+		border: 1px solid #ff5c5c;
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-raised);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+		line-height: 1.5;
+	}
+
+	.neg-example-label {
+		display: block;
+		margin-bottom: var(--space-2);
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: #ff5c5c;
+	}
+
+	.neg-example p {
+		margin: 0;
+	}
+
+	.neg-example strong {
+		color: var(--color-text);
+	}
+
+	/* ---- Negative examples (collapsible, like the old facets) ---- */
+	.negatives {
+		/* Pushed to the bottom of the (now flex, stretch-height) card so the
+		   "More negative examples" toggle lines up across all three dimensions,
+		   regardless of how much baseline/example text sits above it (user
+		   review 2026-11-02). */
+		margin-top: auto;
+		padding-top: var(--space-4);
+	}
+
+	.negatives summary {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--color-link);
+	}
+
+	.negatives summary:hover {
+		text-decoration: underline;
+	}
+
+	.facet-count {
+		color: var(--color-text-faint);
+		font-weight: 400;
+	}
+
+	.negatives ul {
+		margin-top: var(--space-3);
+		padding-left: var(--space-6);
+		display: grid;
+		gap: var(--space-2);
+		font-size: var(--text-sm);
+	}
+
+	.source {
+		color: var(--color-text-faint);
+		font-size: var(--text-xs);
+	}
+
+	/* ---- Mobile/tablet: stack ---- */
+	@media (max-width: 1000px) {
+		.dimension-cards {
+			grid-template-columns: 1fr;
+			max-width: 44rem;
+		}
+	}

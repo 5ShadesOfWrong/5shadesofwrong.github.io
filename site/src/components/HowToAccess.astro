@@ -1,0 +1,51 @@
+---
+import './HowToAccess.css';
+import site from '../data/site.json';
+
+/**
+ * HowToAccess.astro — §1 "Explanation Wrongness" (user review 2026-10-19)
+ * -------------------------------------------------------------------
+ * Introduces the idea of wrongness exactly like the source material:
+ * the motivating example that sets up "wrong — but how?"
+ *
+ * The step-by-step assessment ladder ("every scenario is assessed the
+ * same way") moved to HeroSection.astro per user review 2026-10-29, so
+ * it sits directly under the "How to Assess Wrongness" title it details.
+ *
+ * Security: static content, auto-escaped.
+ */
+---
+
+<section id="how-to-access" class="section" aria-labelledby="access-title">
+	<div class="container">
+		<h2 id="access-title">Explanation "Wrongness"</h2>
+		<p class="intro">
+			Explanations can be wrong — but &ldquo;wrong&rdquo; is not one thing. 
+			<!-- The	scenarios in this page describe hypothetical situations in which a
+			stakeholder engages with an explanation of a concrete AI model. Each
+			scenario is self-contained, so models and explanations vary between
+			scenarios. -->
+		</p>
+
+		<aside class="teaser" data-reveal aria-label="Motivating example">
+			<blockquote>
+				<p>
+					&ldquo;The applicant was rejected <strong>because job experience is too
+					high</strong>.&rdquo;
+				</p>
+			</blockquote>
+			<p class="teaser-question">
+				You suspect this cannot be right. But is it wrong because the applicant
+				should have been accepted or because that is not how the model works?
+				Or both?
+			</p>
+			<p class="teaser-answer">
+				It depends which reference point you use to judge the explanation — but how do we assess wrongness systematically?
+			</p>
+		</aside>
+	</div>
+</section>
+
+
+</style>
+

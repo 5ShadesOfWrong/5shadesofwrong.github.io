@@ -1,0 +1,48 @@
+---
+/**
+ * 404.astro — branded not-found page
+ * -----------------------------------
+ * GitHub Pages serves this automatically for unknown paths (user pages need
+ * a 404.html at the site root — Astro emits /404.html which GH Pages picks up).
+ * Keeps the visitor oriented: back home, or straight to the paper PDF.
+ *
+ * Security: static markup only.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="Page not found"
+	description="This page does not exist. Head back to the Explanation Wrongness companion site."
+>
+	<section class="section" aria-labelledby="nf-title">
+		<div class="container">
+			<p class="code">404</p>
+			<h1 id="nf-title">This explanation is missing</h1>
+			<p>
+				The page you were looking for doesn't exist — an incoherent link, an invalid
+				path, or an unfaithful URL.
+			</p>
+			<p class="actions">
+				<!-- BASE_URL keeps the link correct under a GitHub Pages subpath -->
+				<a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/`}>Back to the site</a>
+			</p>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.code {
+		font-family: var(--font-mono);
+		font-size: var(--text-4xl);
+		color: var(--color-model);
+	}
+
+	h1 {
+		margin-block: var(--space-4);
+	}
+
+	.actions {
+		margin-top: var(--space-6);
+	}
+</style>

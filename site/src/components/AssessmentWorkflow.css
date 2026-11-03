@@ -1,0 +1,105 @@
+/* Styles for AssessmentWorkflow.astro — extracted per review 2026-10-26 */
+
+	.intro {
+		margin-top: var(--space-4);
+		font-size: var(--text-lg);
+		color: var(--color-text-muted);
+		max-width: 56ch;
+	}
+
+	.workflow-grid {
+		margin-top: var(--space-8);
+		display: grid;
+		grid-template-columns: minmax(14rem, 22rem) 1fr;
+		gap: var(--space-12);
+		align-items: start;
+	}
+
+	/* ---- Sticky diagram ---- */
+	.sticky {
+		position: sticky;
+		top: 30vh;
+	}
+
+	/* ---- Steps ---- */
+	.steps {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-12);
+	}
+
+	.step {
+		display: flex;
+		gap: var(--space-6);
+		scroll-margin-top: 30vh;
+	}
+
+	.step-marker {
+		flex-shrink: 0;
+	}
+
+	.step-number {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		border: 2px solid var(--color-border);
+		font-family: var(--font-mono);
+		font-size: var(--text-xl);
+		color: var(--color-text-muted);
+		transition: border-color var(--duration-normal) var(--ease-out),
+			color var(--duration-normal) var(--ease-out);
+	}
+
+	/* Dimension-colored markers (matches PipelineDiagram highlight colors) */
+	.step[data-dimension='coherence'] .step-number {
+		border-color: var(--color-model);
+		color: var(--color-model);
+	}
+	.step[data-dimension='validity'] .step-number {
+		border-color: var(--color-positive);
+		color: var(--color-positive);
+	}
+	.step[data-dimension='faithfulness'] .step-number {
+		border-color: var(--color-negative);
+		color: var(--color-negative);
+	}
+
+	.step-body h3 {
+		font-size: var(--text-xl);
+	}
+
+	.step-question {
+		margin-top: var(--space-2);
+		color: var(--color-text);
+		font-weight: 500;
+	}
+
+	.step-body ul {
+		margin-top: var(--space-3);
+		padding-left: var(--space-5);
+		display: grid;
+		gap: var(--space-1);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+
+	/* ---- Mobile: diagram flows inline, not sticky ---- */
+	@media (max-width: 900px) {
+		.workflow-grid {
+			grid-template-columns: 1fr;
+			gap: var(--space-8);
+		}
+
+		.sticky {
+			position: static;
+		}
+
+		.diagram-col {
+			display: flex;
+			justify-content: center;
+		}
+	}

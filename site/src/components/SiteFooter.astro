@@ -1,0 +1,91 @@
+---
+import './SiteFooter.css';
+import site from '../data/site.json';
+
+// BASE_URL keeps the link correct when GitHub Pages serves from a subpath.
+const paperHref = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${site.paper.file.replace(/^\//, '')}`;
+
+// Partner logos (site/public/logos/). Alt text is required — update the
+// names here if the logo set changes. joinBase keeps them subpath-safe.
+
+const logos = [
+	{ file: 'logos/logo1.png', alt: 'Partner institution 1' },
+	{ file: 'logos/logo2.png', alt: 'Partner institution 2' },
+	{ file: 'logos/logo3.png', alt: 'Partner institution 3' },
+	{ file: 'logos/logo4.png', alt: 'Partner institution 4' },
+	{ file: 'logos/logo5.png', alt: 'Partner institution 5' },
+	{ file: 'logos/logo6.png', alt: 'Partner institution 6' },
+];
+
+/**
+ * Join a public/ path with the configured base URL.
+ * BUGFIX (2026-10-21): string concatenation produced '/shade-pagelogos/…'
+ * because `base` has no trailing slash — the logos 404'd. This normalizes
+ * the slashes on both sides.
+ */
+function joinBase(file: string): string {
+	const base = import.meta.env.BASE_URL.endsWith('/')
+		? import.meta.env.BASE_URL
+		: `${import.meta.env.BASE_URL}/`;
+	return `${base}${file.replace(/^\//, '')}`;
+}
+---
+
+<footer id="footer" class="section footer" aria-labelledby="footer-title">
+	<div class="container">
+		<!-- <h2 id="footer-title" data-reveal>Explore</h2> -->
+
+		<!-- Partner logos — COMMENTED per review 2026-10-26: the site must not
+		     reveal affiliations until the paper is public. Re-enable by
+		     uncommenting this block (the logo files stay in public/logos/).
+		<div class="logo-strip" data-reveal aria-label="Partner institutions">
+			{
+				logos.map((logo) => (
+					<img
+						src={joinBase(logo.file)}
+						alt={logo.alt}
+						loading="lazy"
+						width="120"
+						height="48"
+					/>
+				))
+			}
+		</div>
+		-->
+
+		<div class="footer-grid">
+			
+
+			<!-- Links -->
+			<nav class="links" aria-label="Footer links">
+				<h3>Links</h3>
+				<ul>
+					<!-- Commented per user review 2026-10-21 (re-enable when the paper
+					     is published / a contact address exists):
+					<li>
+						{
+							site.paper.file ? (
+								<a href={paperHref} target="_blank" rel="noopener noreferrer">
+									{site.paper.label}
+								</a>
+							) : (
+								<span class="link-disabled" title="Paper link available at launch">
+									{site.paper.label} (coming soon)
+								</span>
+							)
+						}
+					</li>
+					-->
+					<li><a href="#landing">Back to top</a></li>
+					<!-- <li><a href={site.links.contact}>Contact the authors</a></li> -->
+				</ul>
+			</nav>
+		</div>
+
+		<p class="colophon">
+			{site.title} — companion site · License: {site.license} · Built with{" "}
+			<a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>
+		</p>
+	</div>
+</footer>
+

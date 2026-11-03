@@ -1,0 +1,82 @@
+---
+import './ScenarioPractice.css';
+import banking from '../data/scenarios.banking.json';
+import spam from '../data/scenarios.spam.json';
+import ScenarioCard from './ScenarioCard.astro';
+import type { ScenarioSetData } from '../schemas/schemas';
+
+
+const sets = [banking, spam] as unknown as ScenarioSetData[];
+---
+/**
+ * ScenarioPractice.astro — §5 Practice (DESIGN_PLAN §4)
+ * ---------------------------------------------------
+ * Tabbed scenario sets: Set A (banking, 7 scenarios) and Set B (spam, B1–B6).
+ * Each set shows its shared context (domain + explainee) once, then renders
+ * ScenarioCards. Includes the paper's task instructions (p.11).
+ *
+ * Tabs are native buttons with ARIA tab semantics; sets are sections hidden
+ * with the `hidden` attribute (works without JS: both sets render stacked).
+ *
+ * Security: typed JSON data, auto-escaped; no dynamic HTML.
+ */
+
+
+<section id="practice" class="section" aria-labelledby="practice-title">
+	<div class="container">
+		<h2 id="practice-title" data-reveal>Practice Scenarios</h2>
+		<p class="intro" data-reveal data-reveal-delay="1">
+			For each scenario, rank <strong>coherence</strong>, <strong>validity</strong>,
+			and <strong>faithfulness</strong> from 1 to 6 (1 = fine, 6 = worst). Then ask:
+			how realistic is this scenario? How likely are explainees to correctly
+			recognize the wrongness — and what happens when they don't?
+		</p>
+
+		<div class="tabs" role="tablist" aria-label="Scenario sets">
+			{
+				sets.map((set, i) => (
+					<button
+						type="button"
+						role="tab"
+						id={`tab-${set.setId}`}
+						aria-controls={`panel-${set.setId}`}
+						aria-selected={i === 0 ? 'true' : 'false'}
+						class:list={['tab', { active: i === 0 }]}
+						data-tab={set.setId}
+					>
+						{set.setTitle}
+					</button>
+				))
+			}
+		</div>
+
+		{
+			sets.map((set, i) => (
+				<div
+					role="tabpanel"
+					id={`panel-${set.setId}`}
+					aria-labelledby={`tab-${set.setId}`}
+					class="panel"
+					hidden={i !== 0}
+					data-panel={set.setId}
+				>
+					<aside class="set-context">
+						<h3>Context</h3>
+						<p><strong>Domain:</strong> {set.context.domain}</p>
+						<p><strong>Explainee:</strong> {set.context.explainee}</p>
+					</aside>
+
+					<div class="cards">
+						{set.scenarios.map((scenario) => (
+							<ScenarioCard scenario={scenario} />
+						))}
+					</div>
+				</div>
+			))
+		}
+	</div>
+</section>
+
+
+<script src="../scripts/scenario.ts"></script>
+
