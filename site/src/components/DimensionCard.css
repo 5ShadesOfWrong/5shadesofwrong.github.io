@@ -1,0 +1,117 @@
+/* Styles for DimensionCard.astro — extracted per review 2026-10-26 */
+
+	.dimension-card {
+		background: var(--color-bg-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: var(--space-6);
+		scroll-margin-top: var(--space-8);
+	}
+
+	.dimension-card h3 {
+		font-size: var(--text-xl);
+	}
+
+	.dimension-head {
+		display: flex;
+		align-items: baseline;
+		gap: var(--space-4);
+	}
+
+	.dimension-number {
+		font-family: var(--font-mono);
+		font-size: var(--text-2xl);
+		color: var(--color-model);
+	}
+
+	.relationship {
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+		margin-top: var(--space-1);
+	}
+
+	.definition {
+		margin-top: var(--space-3);
+		max-width: var(--measure);
+	}
+
+	/* ---- Examples stacked (cards sit in 3 columns — vertical space matters) ---- */
+	.examples {
+		margin-top: var(--space-4);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--space-3);
+	}
+
+	.example {
+		border-radius: var(--radius-md);
+		padding: var(--space-3);
+		border: 1px solid var(--color-border);
+	}
+
+	.example-good {
+		border-color: color-mix(in srgb, var(--color-positive) 45%, var(--color-border));
+	}
+
+	.example-flawed {
+		border-color: color-mix(in srgb, var(--color-negative) 45%, var(--color-border));
+	}
+
+	.example h4 {
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--color-text-faint);
+	}
+
+	.example-setup {
+		margin-top: var(--space-1);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	.example blockquote {
+		margin-top: var(--space-1);
+		font-style: italic;
+		font-size: var(--text-sm);
+	}
+
+	.example-why {
+		margin-top: var(--space-1);
+		font-size: var(--text-xs);
+		color: var(--color-text-muted);
+	}
+
+	/* ---- Facets (progressive disclosure) ---- */
+	.facets {
+		margin-top: var(--space-4);
+	}
+
+	.facets summary {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--color-link);
+	}
+
+	.facets summary:hover {
+		text-decoration: underline;
+	}
+
+	.facet-count {
+		color: var(--color-text-faint);
+		font-weight: 400;
+	}
+
+	.facets ul {
+		margin-top: var(--space-3);
+		padding-left: var(--space-6);
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.footnote {
+		margin-top: var(--space-3);
+		font-size: var(--text-sm);
+		color: var(--color-text-faint);
+		font-style: italic;
+	}

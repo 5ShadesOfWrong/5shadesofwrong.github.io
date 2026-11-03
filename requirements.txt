@@ -1,0 +1,4 @@
+# Check also SETUP.md
+
+pypdf==6.21.1
+pdfreader==0.1.15

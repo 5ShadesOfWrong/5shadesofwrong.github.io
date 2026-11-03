@@ -1,0 +1,432 @@
+---
+import './ArchetypeViewer.css';
+import archetypes from '../data/archetypes.json';
+import dimensions from '../data/dimensions.json';
+import Term from './Term.astro';
+import type { Archetype, ArchetypesData, DimensionsData } from '../schemas/schemas';
+
+/**
+ * ArchetypeViewer.astro — §3 The 5(0) Shades of Wrong (v3, user review 2026-10-21)
+ * ---------------------------------------------------------------------------------
+ * One archetype at a time (presentation-friendly), with prev/next controls,
+ * dot indicators, and paper-style scene graphics: THREE panels per archetype —
+ *
+ *   [Ground Truth]  ──▶  [Explanation]  ◀──  [Prediction]
+ *    untouched image     explanation-         model-used features
+ *    (nothing painted)   highlighted          shown in PURPLE
+ *                        GREEN honest /
+ *                        RED misleading
+ *
+ * arranged exactly like the §2 scheme: arrows point toward the center
+ * (Explanation), and the story texts sit BELOW the scheme (user review
+ * 2026-10-28). The wolf is a single-path howling silhouette; the moons
+ * have craters.
+ *
+ * All six archetypes are server-rendered; the viewer toggles visibility with
+ * the `hidden` attribute → works without JS (stacked list), and archetype.ts
+ * adds the one-at-a-time behavior + keyboard arrows.
+ *
+ * Security: typed JSON data, auto-escaped; no dynamic HTML.
+ */
+
+const data = archetypes as unknown as ArchetypesData;
+// Perfect Explainer commented out per user review 2026-10-28: the site now
+// teaches only the 5 Shades of Wrong. The data stays in archetypes.json
+// (the validator still expects 6 entries) — it is simply filtered out here.
+const list = data.archetypes.filter((a) => a.id !== 'perfect-explainer');
+const legend = data.legend;
+
+// Term → concise definition (from dimensions.json tooltips) for the verdict chips.
+// Each term has a positive variant (green) and a negated variant (red) so the
+// tooltip always matches the verdict shown (user review 2026-10-26).
+const dimensionList = (dimensions as unknown as DimensionsData).dimensions;
+const termTips: Record<string, { ok: string; bad: string }> = {
+	Coherent: {
+		ok: dimensionList.find((d) => d.id === 'coherence')?.tooltip ?? '',
+		bad: 'The explanation contradicts itself — its internal logic does not hold.',
+	},
+	Valid: {
+		ok: dimensionList.find((d) => d.id === 'validity')?.tooltip ?? '',
+		bad: 'The explanation does not match the real-world facts — it misrepresents what is actually true.',
+	},
+	Faithful: {
+		ok: dimensionList.find((d) => d.id === 'faithfulness')?.tooltip ?? '',
+		bad: 'The explanation does not reflect how the model actually processed the input.',
+	},
+};
+
+/**
+ * Stylized howling-wolf silhouette — user-provided icon (public/icons/wolf_icon3.avif),
+ * converted once to wolf-mask.png (transparent background). Rendered as a CSS-masked
+ * layer so the silhouette can be tinted per panel (purple/green/red) with a class.
+ */
+const WOLF_MASK = 'icons/wolf-mask.png';
+
+/**
+ * Panel feature states from the explicit scene data (archetypes.json):
+ *   Prediction panel  → `used` flags (purple = what the model actually used)
+ *   Explanation panel → `highlight` flags (green when honest, red when misleading)
+ * A highlight is HONEST when it points at the same feature the model used.
+ */
+function panelState(
+	scene: NonNullable<Archetype['scene']>,
+	kind: 'prediction' | 'explanation'
+) {
+	const flags = kind === 'prediction' ? scene.used : scene.highlight;
+	// `highlightBad` override (Illuminator): the explanation highlights the
+	// very feature the model used — but that feature is the WRONG reason —
+	// so its highlight renders red (misleading) instead of green.
+	const honest =
+		scene.highlightBad !== true &&
+		flags.wolf === scene.used.wolf &&
+		flags.sky === scene.used.sky &&
+		flags.leftMoon === scene.used.leftMoon &&
+		flags.rightMoon === scene.used.rightMoon;
+
+	const moonCls =
+		kind === 'prediction'
+			? { 'feat-used': flags.leftMoon || flags.rightMoon, 'feat-dim': !(flags.leftMoon || flags.rightMoon) }
+			: {
+					// Relevant features use ONE color in both panels (user review
+					// 2026-10-29): the explanation highlight renders purple like the
+					// prediction's used features — no more green/red split.
+					'feat-used': flags.leftMoon || flags.rightMoon,
+					'feat-dim': !(flags.leftMoon || flags.rightMoon),
+				};
+
+	return {
+		skyCls:
+			kind === 'prediction'
+				? { 'feat-used': flags.sky, 'feat-dim': !flags.sky }
+				: {
+						'feat-used': flags.sky,
+						'feat-dim': !flags.sky,
+					},
+		moonCls,
+		wolfCls:
+			kind === 'prediction'
+				? { 'feat-used': flags.wolf, 'feat-dim': !flags.wolf }
+				: {
+						'feat-used': flags.wolf,
+						'feat-dim': !flags.wolf,
+					},
+	};
+}
+
+// Ground strip shared by all three panels.
+const GROUND_PATH = 'M0 152 Q 60 138 120 150 T 240 146 L 240 200 L 0 200 Z';
+
+// Scene semantics per archetype (user review 2026-10-21 — paper-style panels):
+//   Prediction panel  → features the model ACTUALLY used, in purple.
+//   Explanation panel → features the explanation highlights: GREEN when the
+//                       highlight is honest (same feature the model used),
+//                       RED when it is misleading.
+//   Everything not used/highlighted in a panel is dimmed (unimportant).
+//   (The old string-parsing sceneFor was replaced by explicit per-archetype
+//    scene data in archetypes.json + panelState() above — user spec 2026-10-21.)
+
+---
+
+<section id="archetypes" class="section" aria-labelledby="archetypes-title">
+	<div class="container">
+		<h2 id="archetypes-title" data-reveal>The 5 Shades of Wrong</h2>
+		<p class="intro" data-reveal data-reveal-delay="1">
+		Combining the three dimensions yields the 5 Shades of Wrong.
+		<br />
+		Five ways an explanation can be "wrong".
+		</p>
+
+		<div class="viewer" data-reveal data-reveal-delay="2">
+			<div class="stage" data-viewer-stage>
+				{
+					list.map((a, i) => {
+						if (!a.scene) return null; // schema guarantees scene data
+						// Explanation-panel honesty, computed once per archetype —
+						// used by the story column (outside the panel loop below).
+						const explanationHonest = panelState(a.scene, 'explanation').honest;
+						return (
+							<article
+								class:list={['archetype', { correct: a.verdict === 'correct' }]}
+								id={`archetype-${a.id}`}
+								data-archetype
+								hidden={i !== 0}
+								aria-hidden={i !== 0 ? 'true' : undefined}
+							>
+								<header class="head">
+									<h3>{a.name}</h3>
+									<ul class="card-legend" aria-label="Color legend from the paper">
+										{
+											Object.values(legend).map((item) => (
+												<li>
+													<span class="swatch" style={`background: ${item.color}`} aria-hidden="true" />
+													{item.label}
+												</li>
+											))
+										}
+									</ul>
+								</header>
+
+								<div class="body">
+										{/* ---- Three paper-style panels, mirroring the Explanation
+										     Wrongness scheme: Ground Truth (what is true) →
+										     Prediction (what the model used) → Explanation
+										     (what the explainee sees) ---- */}
+										{[
+											{ kind: 'groundtruth' as const },
+											{ kind: 'explanation' as const },
+											{ kind: 'prediction' as const },
+										].map((panel, i) => {
+											const isTruth = panel.kind === 'groundtruth';
+											const isPred = panel.kind === 'prediction';
+											// Ground-truth panel: the untouched image — the exact same
+											// scene with NOTHING painted (no feature coloring).
+											const state = isTruth
+												? { skyCls: {}, moonCls: {}, wolfCls: {} }
+												: panelState(a.scene, panel.kind);
+										// Moon count per PANEL (user review 2026-10-28): the ground
+										// truth always shows the original image — wolf + ONE full
+										// moon — while prediction/explanation follow the scene data
+										// (Cassandra + Hallucinator: 2 moons).
+										const moonCount = isTruth ? 1 : a.scene.moons;
+										// Two-moon scenes: LEFT moon is a waxing crescent, nudged
+										// right of the scheme badge sitting in the top-left corner
+										// (at cx 34 it hid behind the badge); RIGHT moon is full.
+										// Single-moon scenes: one full moon, centered.
+										const moonPositions =
+											moonCount === 2
+												? [
+														{ cx: 70, cy: 30, r: 14, key: 'leftMoon', crescent: true },
+														{ cx: 206, cy: 30, r: 14, key: 'rightMoon', crescent: false },
+													]
+												: [{ cx: 120, cy: 30, r: 14, key: 'leftMoon', crescent: false }];
+										const figure = (
+											<figure class="scene-figure">
+												{/* Panel header above the scene (user review 2026-10-28):
+												    the scheme icon + its name — "Ground truth",
+												    "Explanation", "Prediction" — matching the §2 scheme
+												    nodes. The Coherence verdict chip stays on the
+												    Explanation panel, next to the label. */}
+												<div class="scene-head">
+													<span class="scene-icon">
+														{panel.kind === 'groundtruth' && (
+															<svg viewBox="0 0 48 48" aria-hidden="true">
+																<circle cx="24" cy="24" r="18" />
+																<ellipse cx="24" cy="24" rx="8" ry="18" />
+																<line x1="6" y1="24" x2="42" y2="24" />
+															</svg>
+														)}
+														{panel.kind === 'explanation' && (
+															<svg viewBox="0 0 48 48" aria-hidden="true">
+																<rect x="6" y="10" width="7" height="30" class="bar" />
+																<rect x="17" y="18" width="7" height="22" class="bar" />
+																<rect x="28" y="26" width="7" height="14" class="bar" />
+																<rect x="39" y="32" width="7" height="8" class="bar" />
+															</svg>
+														)}
+														{panel.kind === 'prediction' && (
+															<svg viewBox="0 0 48 48" aria-hidden="true">
+																<rect x="12" y="12" width="24" height="24" rx="4" />
+																<text x="24" y="29" text-anchor="middle" class="chip-text">AI</text>
+																<line x1="17" y1="5" x2="17" y2="12" /><line x1="24" y1="5" x2="24" y2="12" /><line x1="31" y1="5" x2="31" y2="12" />
+																<line x1="17" y1="36" x2="17" y2="43" /><line x1="24" y1="36" x2="24" y2="43" /><line x1="31" y1="36" x2="31" y2="43" />
+																<line x1="5" y1="17" x2="12" y2="17" /><line x1="5" y1="24" x2="12" y2="24" /><line x1="5" y1="31" x2="12" y2="31" />
+																<line x1="36" y1="17" x2="36" y2="24" /><line x1="36" y1="24" x2="43" y2="24" /><line x1="36" y1="31" x2="43" y2="31" />
+															</svg>
+														)}
+													</span>
+													<span class="scene-title">
+														{isTruth ? 'Ground truth' : isPred ? 'Prediction' : 'Explanation'}
+													</span>
+												</div>
+												<div
+													class:list={[
+														'scene',
+														// Border color = the panel's scheme color from §2:
+														// purple (Ground Truth), green (Explanation), blue (Prediction).
+														panel.kind === 'groundtruth'
+															? 'scene-truth'
+															: panel.kind === 'explanation'
+																? 'scene-explanation'
+																: 'scene-prediction',
+													]}
+												>
+													<svg
+														viewBox="0 0 240 200"
+														role="img"
+														aria-label={
+																isTruth
+																	? 'Ground truth scene: the untouched image — it truly shows a wolf, recognizable by its shape.'
+																	: isPred
+																		? `Prediction scene: the model actually used the ${a.modelUsed} (purple).`
+																		: `Explanation scene: the explanation highlights the ${a.highlighted} (purple — relevant feature).`
+														}
+													>
+														<rect x="0" y="0" width="240" height="200" rx="12" class:list={['sky', state.skyCls]} />
+														{moonPositions.map((m) => {
+															// Each moon is colored independently: the flags
+															// leftMoon/rightMoon decide per position.
+															const active = isTruth
+																? false
+																: isPred
+																	? a.scene.used[m.key]
+																	: a.scene.highlight[m.key];
+															const cls = isTruth
+																? {}
+																: isPred
+																	? { 'feat-used': active, 'feat-dim': !active }
+																	: {
+																			// Same color as prediction: relevant features (user
+																			// review 2026-10-29) — no green/red split.
+																			'feat-used': active,
+																			'feat-dim': !active,
+																		};
+															// Waxing crescent: full disc minus an offset circle
+															// (mask-style cutout), drawn with the disc's fill.
+															if (m.crescent) {
+																return (
+																	<g class:list={['moon', 'moon-crescent', cls]}>
+																		<path
+																			d={`M ${m.cx} ${m.cy - m.r} a ${m.r} ${m.r} 0 1 0 0 ${2 * m.r} a ${m.r * 0.72} ${m.r} 0 1 1 0 ${-2 * m.r} Z`}
+																			class="moon-disc"
+																		/>
+																		<circle cx={m.cx - 4} cy={m.cy - 4} r="2.5" class="crater" />
+																		<circle cx={m.cx - 6} cy={m.cy + 3} r="2" class="crater" />
+																	</g>
+																);
+															}
+															return (
+																<g class:list={['moon', cls]}>
+																	<circle cx={m.cx} cy={m.cy} r={m.r} class="moon-disc" />
+																	<circle cx={m.cx - 5} cy={m.cy - 5} r="3.5" class="crater" />
+																	<circle cx={m.cx + 5} cy={m.cy + 4} r="2.5" class="crater" />
+																	<circle cx={m.cx + 2} cy={m.cy - 6} r="2" class="crater" />
+																</g>
+															);
+														})}
+														<path d={GROUND_PATH} class="ground" />
+													</svg>
+													{/* Wolf layer — HTML sibling of the SVG (a <span> inside <svg>
+													    is invalid and breaks out of the panel). */}
+													<span
+														class:list={['wolf', state.wolfCls]}
+														style={`-webkit-mask-image: url(${import.meta.env.BASE_URL.replace(/\/$/, '')}/${WOLF_MASK}); mask-image: url(${import.meta.env.BASE_URL.replace(/\/$/, '')}/${WOLF_MASK});`}
+														aria-hidden="true"
+													/>
+											</div>
+											{/* Coherence verdict BELOW the Explanation image (user review
+											    2026-10-29) — the green/red chip sits under the panel. */}
+											{panel.kind === 'explanation' && (
+												<div class="scene-foot">
+													<span class:list={['chip', a.coherent ? 'chip--positive' : 'chip--negative']}>
+														<Term
+															term={a.coherent ? 'Coherent' : 'Incoherent'}
+															definition={a.coherent ? termTips.Coherent.ok : termTips.Coherent.bad}
+															variant={a.coherent ? 'yes' : 'no'}
+														/>
+													</span>
+												</div>
+											)}
+										</figure>
+									);
+
+									// Arrows between the panels, pointing toward the center
+									// (Explanation) — same geometry as the §2 scheme arrows.
+									// Each arrow carries its dimension verdict below, exactly where
+									// the paper puts its stickers: Validity on the Ground-Truth
+									// arrow, Faithfulness on the Prediction arrow.
+									if (i === 2) return [figure];
+									const arrowGeom =
+										i === 0
+											? { shaft: 'M2 7 H106', head: '106,1.5 120,7 106,12.5' }
+											: { shaft: 'M14 7 H118', head: '14,1.5 0,7 14,12.5' };
+									const verdict =
+										i === 0 ? (
+											<span class:list={['chip', a.valid ? 'chip--positive' : 'chip--negative']}>
+												<Term
+													term={a.valid ? 'Valid' : 'Invalid'}
+													definition={a.valid ? termTips.Valid.ok : termTips.Valid.bad}
+													variant={a.valid ? 'yes' : 'no'}
+												/>
+											</span>
+										) : (
+											<span class:list={['chip', a.faithful ? 'chip--positive' : 'chip--negative']}>
+												<Term
+													term={a.faithful ? 'Faithful' : 'Unfaithful'}
+													definition={a.faithful ? termTips.Faithful.ok : termTips.Faithful.bad}
+													variant={a.faithful ? 'yes' : 'no'}
+												/>
+											</span>
+										);
+									return [
+										figure,
+										<div class="flow-arrow">
+											<svg class="line" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
+												<path d={arrowGeom.shaft} class="shaft" vector-effect="non-scaling-stroke" />
+												<polygon points={arrowGeom.head} class="head" />
+											</svg>
+											{verdict}
+										</div>,
+									];
+									})}
+
+									<div class="story">
+										<p class="explanation">&ldquo;{a.explanation}&rdquo;</p>
+
+										{/* Facts aligned under their panels (user review 2026-10-29):
+										    ground-truth feature under Ground Truth, explanation
+										    highlight under Explanation, used feature under
+										    Prediction — same columns as the scheme row. */}
+										<dl class="facts">
+											<div class="fact fact-truth">
+												<dt>Ground truth feature</dt>
+												<dd class="truth">{a.groundTruthFeature}</dd>
+											</div>
+											<div class="fact fact-highlight">
+												<dt>Explanation highlighted</dt>
+												<dd class:list={['highlighted', { bad: !explanationHonest }]}>{a.highlighted}</dd>
+											</div>
+											<div class="fact fact-used">
+												<dt>Model actually used</dt>
+												<dd class="used">{a.modelUsed}</dd>
+											</div>
+										</dl>
+
+										<p class="summary">{a.summary}</p>
+									</div>
+								</div>
+							</article>
+						);
+					})
+				}
+			</div>
+
+			<!-- Viewer controls -->
+			<div class="controls">
+				<button type="button" class="nav-btn" data-viewer-prev aria-label="Previous archetype">
+					←
+				</button>
+				<div class="dots" data-viewer-dots role="tablist" aria-label="Archetype selector">
+					{
+						list.map((a, i) => (
+							<button
+								type="button"
+								class:list={['dot-btn', { active: i === 0 }]}
+								data-viewer-dot={a.id}
+								aria-label={`Show archetype ${a.name}`}
+								aria-current={i === 0 ? 'true' : undefined}
+							/>
+						))
+					}
+				</div>
+				<button type="button" class="nav-btn" data-viewer-next aria-label="Next archetype">
+					→
+				</button>
+				<span class="counter" data-viewer-counter aria-live="polite">1 / 6</span>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<script src="../scripts/archetype.ts"></script>
+

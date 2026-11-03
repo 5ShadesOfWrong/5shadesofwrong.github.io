@@ -1,0 +1,209 @@
+---
+import './ScenePanel.css';
+import type { ArchetypeScene } from '../schemas/schemas';
+
+/**
+ * ScenePanel.astro — one wolf-scene panel, shared by the hero (Perfect
+ * Explainer) and the 5 Shades viewer (user review 2026-10-28).
+ * -------------------------------------------------------------------------
+ * Renders the paper-style scene (sky, moons, ground, wolf silhouette) with
+ * per-feature coloring driven by the same `panelState` semantics as the
+ * viewer:
+ *
+ *   kind: 'groundtruth'  → the untouched image, NOTHING painted
+ *   kind: 'prediction'   → model-used features in PURPLE
+ *   kind: 'explanation'  → highlights GREEN (honest) / RED (misleading)
+ *
+ * `highlightBad` forces the explanation highlight to render red even when it
+ * matches the used flags (Illuminator: right feature, wrong reason).
+ *
+ * Security: purely presentational; all data comes from typed JSON.
+ */
+
+interface Props {
+	/** Scene flags from archetypes.json. */
+	scene: ArchetypeScene;
+	/** Which panel variant to render. */
+	kind: 'groundtruth' | 'prediction' | 'explanation';
+	/** Force the explanation highlight to render as misleading (red). */
+	highlightBad?: boolean;
+	/** Accessible description of the scene. */
+	label: string;
+	/** Bare mode (hero backdrop): no scheme badge, no box — just wolf, moon,
+	 *  and ground floating on the page background. */
+	bare?: boolean;
+}
+
+const { scene, kind, highlightBad = false, label, bare = false } = Astro.props;
+
+const isTruth = kind === 'groundtruth';
+const isPred = kind === 'prediction';
+
+// Ground-truth panel: the untouched image — NOTHING painted.
+const state = isTruth
+	? { skyCls: {}, moonCls: {}, wolfCls: {}, honest: true }
+	: panelState(scene, kind);
+
+// Moon count per panel: the ground truth always shows the original image —
+// wolf + ONE full moon — while prediction/explanation follow the scene data
+// (Cassandra + Hallucinator: 2 moons).
+const moonCount = isTruth ? 1 : scene.moons;
+
+// Two-moon scenes: LEFT moon is a waxing crescent, nudged right of the
+// scheme badge in the top-left corner; RIGHT moon is full.
+// Single-moon scenes: one full moon, centered.
+const moonPositions =
+	moonCount === 2
+		? [
+				{ cx: 70, cy: 30, r: 14, key: 'leftMoon', crescent: true },
+				{ cx: 206, cy: 30, r: 14, key: 'rightMoon', crescent: false },
+			]
+		: [{ cx: 120, cy: 30, r: 14, key: 'leftMoon', crescent: false }];
+
+/**
+ * Feature-state classes for a panel — same semantics as the viewer's
+ * panelState(): purple = model-used, green = honest highlight,
+ * red = misleading highlight, black = unused/unimportant.
+ */
+function panelState(
+	scene: ArchetypeScene,
+	kind: 'prediction' | 'explanation'
+) {
+	const flags = kind === 'prediction' ? scene.used : scene.highlight;
+	const honest =
+		scene.highlightBad !== true &&
+		flags.wolf === scene.used.wolf &&
+		flags.sky === scene.used.sky &&
+		flags.leftMoon === scene.used.leftMoon &&
+		flags.rightMoon === scene.used.rightMoon;
+
+	const moonCls =
+		kind === 'prediction'
+			? { 'feat-used': flags.leftMoon || flags.rightMoon, 'feat-dim': !(flags.leftMoon || flags.rightMoon) }
+			: {
+					'feat-hl-good': (flags.leftMoon || flags.rightMoon) && honest,
+					'feat-hl-bad': (flags.leftMoon || flags.rightMoon) && !honest,
+					'feat-dim': !(flags.leftMoon || flags.rightMoon),
+				};
+
+	return {
+		skyCls:
+			kind === 'prediction'
+				? { 'feat-used': flags.sky, 'feat-dim': !flags.sky }
+				: {
+						'feat-hl-good': flags.sky && honest,
+						'feat-hl-bad': flags.sky && !honest,
+						'feat-dim': !flags.sky,
+					},
+		moonCls,
+		wolfCls:
+			kind === 'prediction'
+				? { 'feat-used': flags.wolf, 'feat-dim': !flags.wolf }
+				: {
+						'feat-hl-good': flags.wolf && honest,
+						'feat-hl-bad': flags.wolf && !honest,
+						'feat-dim': !flags.wolf,
+					},
+		honest,
+	};
+}
+
+// Ground strip shared by all panels.
+const GROUND_PATH = 'M0 152 Q 60 138 120 150 T 240 146 L 240 200 L 0 200 Z';
+
+// Wolf silhouette mask (public/icons/wolf-mask.png).
+const WOLF_MASK = 'icons/wolf-mask.png';
+---
+
+<figure class="scene-figure">
+	<div
+		class:list={[
+			'scene',
+			// Border + badge color = the panel's scheme color from §2:
+			// purple (Ground Truth), green (Explanation), blue (Prediction).
+			kind === 'groundtruth' ? 'scene-truth' : kind === 'explanation' ? 'scene-explanation' : 'scene-prediction',
+			// Bare mode (hero backdrop): no badge, no box — just the scene.
+			{ bare },
+		]}
+	>
+		<svg viewBox="0 0 240 200" role="img" aria-label={label}>
+			<rect x="0" y="0" width="240" height="200" rx="12" class:list={['sky', state.skyCls]} />
+			{
+				moonPositions.map((m) => {
+					const active = isTruth ? false : isPred ? scene.used[m.key] : scene.highlight[m.key];
+					const cls = isTruth
+						? {}
+						: isPred
+							? { 'feat-used': active, 'feat-dim': !active }
+							: {
+									'feat-hl-good': active && state.honest,
+									'feat-hl-bad': active && !state.honest,
+									'feat-dim': !active,
+								};
+					// Waxing crescent: full disc minus an offset circle
+					// (mask-style cutout), drawn with the disc's fill.
+					if (m.crescent) {
+						return (
+							<g class:list={['moon', 'moon-crescent', cls]}>
+								<path
+									d={`M ${m.cx} ${m.cy - m.r} a ${m.r} ${m.r} 0 1 0 0 ${2 * m.r} a ${m.r * 0.72} ${m.r} 0 1 1 0 ${-2 * m.r} Z`}
+									class="moon-disc"
+								/>
+								<circle cx={m.cx - 4} cy={m.cy - 4} r="2.5" class="crater" />
+								<circle cx={m.cx - 6} cy={m.cy + 3} r="2" class="crater" />
+							</g>
+						);
+					}
+					return (
+						<g class:list={['moon', cls]}>
+							<circle cx={m.cx} cy={m.cy} r={m.r} class="moon-disc" />
+							<circle cx={m.cx - 5} cy={m.cy - 5} r="3.5" class="crater" />
+							<circle cx={m.cx + 5} cy={m.cy + 4} r="2.5" class="crater" />
+							<circle cx={m.cx + 2} cy={m.cy - 6} r="2" class="crater" />
+						</g>
+					);
+				})
+			}
+			<path d={GROUND_PATH} class="ground" />
+		</svg>
+		{/* Wolf layer — HTML sibling of the SVG (a <span> inside <svg> is
+		    invalid and breaks out of the panel). */}
+		<span
+			class:list={['wolf', state.wolfCls]}
+			style={`-webkit-mask-image: url(${import.meta.env.BASE_URL.replace(/\/$/, '')}/${WOLF_MASK}); mask-image: url(${import.meta.env.BASE_URL.replace(/\/$/, '')}/${WOLF_MASK});`}
+			aria-hidden="true"
+		/>
+		{/* Scheme icon badge: the same node icon as the §2 scheme — globe
+		    (Ground Truth), bar chart (Explanation), AI chip (Prediction).
+		    Hidden in bare mode (hero backdrop). */}
+		{!bare && (
+			<span class="scene-badge" aria-hidden="true">
+			{kind === 'groundtruth' && (
+				<svg viewBox="0 0 48 48">
+					<circle cx="24" cy="24" r="18" />
+					<ellipse cx="24" cy="24" rx="8" ry="18" />
+					<line x1="6" y1="24" x2="42" y2="24" />
+				</svg>
+			)}
+			{kind === 'explanation' && (
+				<svg viewBox="0 0 48 48">
+					<rect x="6" y="10" width="7" height="30" class="bar" />
+					<rect x="17" y="18" width="7" height="22" class="bar" />
+					<rect x="28" y="26" width="7" height="14" class="bar" />
+					<rect x="39" y="32" width="7" height="8" class="bar" />
+				</svg>
+			)}
+			{kind === 'prediction' && (
+				<svg viewBox="0 0 48 48">
+					<rect x="12" y="12" width="24" height="24" rx="4" />
+					<text x="24" y="29" text-anchor="middle" class="chip-text">AI</text>
+					<line x1="17" y1="5" x2="17" y2="12" /><line x1="24" y1="5" x2="24" y2="12" /><line x1="31" y1="5" x2="31" y2="12" />
+					<line x1="17" y1="36" x2="17" y2="43" /><line x1="24" y1="36" x2="24" y2="43" /><line x1="31" y1="36" x2="31" y2="43" />
+					<line x1="5" y1="17" x2="12" y2="17" /><line x1="5" y1="24" x2="12" y2="24" /><line x1="5" y1="31" x2="12" y2="31" />
+					<line x1="36" y1="17" x2="36" y2="24" /><line x1="36" y1="24" x2="43" y2="24" /><line x1="36" y1="31" x2="43" y2="31" />
+				</svg>
+			)}
+			</span>
+		)}
+	</div>
+</figure>

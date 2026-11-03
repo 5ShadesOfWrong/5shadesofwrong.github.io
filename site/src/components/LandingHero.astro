@@ -1,0 +1,178 @@
+---
+import './LandingHero.css';
+import site from '../data/site.json';
+import archetypes from '../data/archetypes.json';
+import ScenePanel from './ScenePanel.astro';
+import type { Archetype, ArchetypesData } from '../schemas/schemas';
+
+/**
+ * LandingHero.astro — first section (user review 2026-10-28)
+ * -----------------------------------------------------------
+ * Brand headline + shade chips as before. The Perfect Explainer — which
+ * left the 5 Shades viewer — now lives in the BACKGROUND: a large, greyed
+ * watermark of its ground-truth scene on the right, behind the text
+ * (decorative only: aria-hidden, no pointer events).
+ *
+ * Security: static content from typed JSON; auto-escaped.
+ */
+
+// The five shades, in paper order — clickable chips that jump to their
+// archetype in the 5 Shades viewer (user review 2026-11-02). The Perfect
+// Explainer is NOT listed: it lives in the hero backdrop (see below).
+const shades = [
+	{ id: 'perfect-liar', name: 'Perfect Liar' },
+	{ id: 'illuminator', name: 'Illuminator' },
+	{ id: 'confused-illuminator', name: 'Cassandra' },
+	{ id: 'storyteller', name: 'Storyteller' },
+	{ id: 'hallucinator', name: 'Hallucinator' },
+];
+
+// The Perfect Explainer — same typed data the viewer uses.
+const data = archetypes as unknown as ArchetypesData;
+const perfect = data.archetypes.find((a) => a.id === 'perfect-explainer') as Archetype;
+---
+
+<section id="landing" class="section landing" aria-labelledby="landing-title">
+	<div class="container landing-layout">
+	{
+		perfect?.scene && (
+			<div class="hero-backdrop">
+				{/* One scene at a time: Ground Truth → Model decision → Explanation.
+				    Three labeled buttons below the image switch directly between
+				    the cases (user review 2026-10-28 — replaces the arrow button
+				    and the corner tag). The scene stays ghosted; texts and buttons
+				    use the section's normal colors. */}
+				<div class="backdrop-stage" data-backdrop-stage>
+					{[
+						{
+							kind: 'groundtruth' as const,
+							name: 'Ground Truth',
+							question: 'What is the perfect explainer?',
+							caption:
+								'The image shows a wolf. It is possible to identify it by the shape of the body — the ears, the snout, the posture — and by the moon above it.',
+							label: 'Ground truth scene: the untouched image — it truly shows a wolf under a moon.',
+						},
+						{
+							kind: 'prediction' as const,
+							name: 'Model decision',
+							question: 'What is the perfect explainer?',
+							caption:
+								'In the perfect explainer, the model uses the shape of the animal and the moon as features and predicts that it is a wolf.',
+							label: 'Prediction scene: the model actually used the shape and the moon (purple).',
+						},
+						{
+							kind: 'explanation' as const,
+							name: 'Explanation',
+							question: 'What is the perfect explainer?',
+							caption:
+								'In the perfect explainer, the explanation highlights the shape and the moon too, giving the same reason as the model — nothing hidden, nothing invented.',
+							label: 'Explanation scene: the explanation highlights the shape and the moon (green — honest).',
+						},
+					].map((step, i) => (
+						<div class="backdrop-step" hidden={i !== 0} data-backdrop-step data-step-kind={step.kind}>
+							<p class="backdrop-question">{step.question}</p>
+							<div class="backdrop-frame">
+								<ScenePanel kind={step.kind} scene={perfect.scene} label={step.label} bare />
+							</div>
+							<p class="backdrop-caption">{step.caption}</p>
+						</div>
+					))}
+				</div>
+
+				<div class="backdrop-tabs" data-backdrop-tabs role="tablist" aria-label="Perfect explainer views">
+					{[
+						{ kind: 'groundtruth' as const, name: 'Ground Truth' },
+						{ kind: 'prediction' as const, name: 'Model decision' },
+						{ kind: 'explanation' as const, name: 'Explanation' },
+					].map((tab, i) => (
+						<button
+							type="button"
+							class:list={['backdrop-tab', { active: i === 0 }]}
+							data-backdrop-tab={tab.kind}
+							aria-pressed={i === 0 ? 'true' : 'false'}
+						>
+							{tab.name}
+						</button>
+					))}
+				</div>
+			</div>
+		)
+	}
+	<div class="landing-copy">
+		<h1 id="landing-title" data-reveal data-reveal-delay="1">{site.landing.title}</h1>
+		<p class="lede" data-reveal data-reveal-delay="2">{site.landing.subtitle}</p>
+
+		<ul class="shades" data-reveal data-reveal-delay="3" aria-label="The five shades of wrong">
+			{
+				shades.map((shade, i) => (
+					<li class="shade-chip" data-reveal data-reveal-delay={3 + i}>
+						<a
+							href={`#archetype-${shade.id}`}
+							class="shade-link"
+							data-shade-target={shade.id}
+							aria-label={`Go to the ${shade.name} example`}
+						>
+							<span class="shade-index" aria-hidden="true">{i + 1}</span>
+							{shade.name}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="scroll-hint" data-reveal data-reveal-delay="9">Scroll to explore ↓</p>
+	</div>
+	</div>
+</section>
+
+<script>
+	// Hero backdrop switcher: three labeled buttons (Ground Truth / Model
+	// decision / Explanation) jump directly to their scene. Attribute-scoped;
+	// no dynamic HTML.
+	const stage = document.querySelector('[data-backdrop-stage]');
+	if (stage) {
+		const steps = Array.from(stage.querySelectorAll<HTMLElement>('[data-backdrop-step]'));
+		const tabs = Array.from(
+			stage.parentElement?.querySelectorAll<HTMLButtonElement>('[data-backdrop-tab]') ?? []
+		);
+
+		const show = (kind: string) => {
+			steps.forEach((s) => (s.hidden = s.dataset.stepKind !== kind));
+			tabs.forEach((t) => {
+				const active = t.dataset.backdropTab === kind;
+				t.classList.toggle('active', active);
+				t.setAttribute('aria-pressed', active ? 'true' : 'false');
+			});
+		};
+
+		for (const tab of tabs) {
+			tab.addEventListener('click', () => show(tab.dataset.backdropTab ?? ''));
+		}
+	}
+
+	// Shade chips → jump to the matching archetype in the 5 Shades viewer.
+	// We prevent the default anchor jump and instead show the archetype first,
+	// then smooth-scroll to its card so the page glides to the example (not
+	// the section start) — user review 2026-11-02. No dynamic HTML.
+	const shadeLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-shade-target]'));
+	for (const link of shadeLinks) {
+		link.addEventListener('click', (event) => {
+			const id = link.dataset.shadeTarget;
+			if (!id) return;
+			event.preventDefault();
+			// Tell the viewer to switch to this archetype.
+			window.dispatchEvent(new CustomEvent('shade:show', { detail: { id } }));
+			// Smooth-scroll to the (now visible) archetype card. The viewer's
+			// DOM change (switching the visible card) can interrupt a smooth
+			// scroll if it lands mid-flight, so wait one frame for it to settle
+			// before starting the glide.
+			requestAnimationFrame(() => {
+				const card = document.getElementById(`archetype-${id}`);
+				if (card) {
+					const top = card.getBoundingClientRect().top + window.scrollY;
+					window.scrollTo({ top, behavior: 'smooth' });
+				}
+			});
+		});
+	}
+</script>

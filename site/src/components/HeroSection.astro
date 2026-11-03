@@ -1,0 +1,89 @@
+---
+import './HeroSection.css';
+import site from '../data/site.json';
+import PipelineFlow from './PipelineFlow.astro';
+
+/**
+ * HeroSection.astro — §0 Hero (DESIGN_PLAN §4)
+ * -----------------------------------------
+ * Title "How to Assess Wrongness" (site.title), the paper's subtitle as
+ * the hook question, and the paper reference.
+ *
+ * Also carries the "every scenario is assessed the same way" step
+ * ladder (moved from HowToAccess.astro per user review 2026-10-29), as
+ * it details how this title's assessment actually works.
+ *
+ * Content comes from site.json (single source of truth).
+ * Security: static data from a typed JSON import; auto-escaped by Astro.
+ */
+
+const steps = [
+	{
+		number: 1,
+		key: 'context',
+		title: 'Read the context',
+		text: 'Understand the scenario — the AI system, its purpose, and who engages with the explanation.',
+	},
+	{
+		number: 2,
+		key: 'seen',
+		title: 'Observe the explanation itself',
+		text: 'Judge its (internal logical) coherence — does the explanation hold together on its own?',
+	},
+	{
+		number: 3,
+		key: 'truth',
+		title: 'Consider the ground truth',
+		text: 'Judge validity — does the explanation align with what is actually true?',
+	},
+	{
+		number: 4,
+		key: 'behavior',
+		title: 'Consider the actual model behavior',
+		text: 'Judge faithfulness — does the explanation reflect how the model really worked?',
+	},
+];
+---
+
+<section id="hero" class="section hero" aria-labelledby="hero-title">
+	<div class="container hero-grid">
+		<div class="hero-copy">
+			<h1 id="hero-title" data-reveal data-reveal-delay="1">How to Assess "Wrongness"</h1>
+			<p class="lede" data-reveal data-reveal-delay="2">A step-by-step guide to assessing the "wrongness" of AI explanations.</p>
+		</div>
+
+		<div class="hero-visual">
+			{/* The scheme is constructed progressively as the user scrolls:
+			   each callout/node carries its own data-reveal (see PipelineFlow),
+			   so box 0 → box 1 → the central scheme appear in sequence
+			   (user review 2026-11-02). */}
+			<PipelineFlow />
+		</div>
+	</div>
+
+	{/* "Every scenario is assessed the same way" step ladder — commented
+	     out per user review 2026-10-29, keeping markup for possible reuse.
+	<div class="container">
+		<h3 class="flow-title">Every scenario is assessed the same way:</h3>
+		<p class="flow-subtitle">
+			Each step below matches a callout in the diagram above (same colors) —
+			the ladder is how you work through that diagram for a given scenario.
+		</p>
+		<ol class="assess-flow" role="list">
+			{
+				steps.map((step, i) => (
+					<li class={`flow-step flow-step-${step.key}`} data-reveal data-reveal-delay={i}>
+						<span class="flow-number">{step.number}</span>
+						<div>
+							<h4>{step.title}</h4>
+							<p>{step.text}</p>
+						</div>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+	*/}
+</section>
+
+

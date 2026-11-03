@@ -1,0 +1,185 @@
+/**
+ * tokens.css — Design tokens for Shade Page
+ * ------------------------------------------
+ * Single source of truth for the visual language.
+ *
+ * Color system (user review 2026-10-29 — aligned with the paper's figures):
+ * three INDEPENDENT semantic axes, each with its own hue family so no
+ * color means two different things at once:
+ *
+ *   Axis A — the three wrongness DIMENSIONS (fixed identity everywhere a
+ *            dimension is referenced: dimension cards, pipeline highlights,
+ *            assessment steps). See --dim-coherence/validity/faithfulness.
+ *   Axis B — VERDICT (correct/honest vs. wrong/misleading). See
+ *            --color-positive/--color-negative. Kept separate from Axis A
+ *            so "unfaithful" (a dimension) is never confused with "wrong" (a
+ *            verdict) by color alone.
+ *   Axis C — structural ROLE (Ground Truth / Explanation / Prediction) and
+ *            general brand accent. See --color-model (role/brand purple)
+ *            and --color-focus (Explanation role / focus ring).
+ *
+ * All five accent hues are drawn from the Okabe–Ito colorblind-safe
+ * qualitative palette (adjusted in lightness for the dark background) so
+ * Axis A and Axis B stay distinguishable under deuteranopia/protanopia.
+ *
+ * "Minimal Paper" theme (user review 2026-11-02 — chosen from 4 live
+ * light-theme candidates over the original dark "indigo night" theme).
+ * Warm off-white surface, serif headings + sans body, near-monochrome UI
+ * chrome — color is reserved for the paper's figure/dimension semantics
+ * rather than used in buttons/borders/links. All color pairs used for text
+ * must keep WCAG AA contrast (≥ 4.5:1) — verified pairs are marked below.
+ */
+
+:root {
+	/* ---- Color: base surfaces (warm off-white — "printed page" feel) ---- */
+	--color-bg: #faf9f6; /* page background */
+	--color-bg-deep: #f3f2ee; /* gradient anchor (kept for structural compat; see body rule in base.css) */
+	--color-bg-raised: #ffffff; /* cards, raised surfaces */
+	--color-bg-overlay: #efede7; /* modals, tooltips, code */
+	--color-border: #ddd9ce; /* hairlines, card borders */
+
+	/* ---- Color: text (AA on --color-bg) ---- */
+	--color-text: #201e1a; /* primary text — ~16:1 on bg */
+	--color-text-muted: #55524a; /* secondary text — ~7:1 on bg */
+	--color-text-faint: #726e63; /* captions — ~4.7:1 on bg */
+
+	/* ---- Color: paper legend accents (meaningful use only) ----
+	 * --color-model / --color-positive / --color-negative / --color-neutral
+	 * remain the ARCHETYPE legend (purple = model-used, teal/emerald =
+	 * honest highlight, vermillion/orange = misleading highlight, gray =
+	 * unimportant) — identical semantics to the paper's wolf/husky figure.
+	 * Shades below are darkened from the original dark-theme hues so they
+	 * keep AA contrast on the white/off-white background (user review
+	 * 2026-11-02 — "Minimal Paper" theme) while staying the same hue
+	 * family, so readers who saw the paper's figures still recognize them.
+	 * UI chrome (borders, buttons, --color-link) deliberately stays
+	 * near-monochrome — color is reserved for these figure/dimension
+	 * accents only, never for interface decoration.
+	 */
+	--color-model: #6d28d9; /* violet — model-used features — ~7:1 on bg */
+	/* Lighter lavender fill for the wolf/moon "relevant feature" silhouette —
+	   the full-strength --color-model reads too heavy once it covers a big
+	   solid shape; this softer tint matches the Perfect Explainer hero
+	   widget (user review 2026-11-02). Text/borders keep --color-model. */
+	--color-model-soft: color-mix(in srgb, var(--color-model) 62%, white);
+	--color-positive: #047857; /* emerald — highlighted/honest/correct — ~5.2:1 on bg */
+	--color-negative: #c2410c; /* orange — highlighted/misleading/wrong — ~4.9:1 on bg */
+	--color-neutral: #726e63; /* warm gray — unimportant */
+
+	/* ---- Color: interactive ---- */
+	--color-link: #201e1a; /* links — same as body text; underlined (base.css) since chrome stays grayscale */
+	--color-focus: #b45309; /* focus ring — amber-brown, high visibility on light bg */
+
+	/* ---- Color: wrongness DIMENSIONS (Axis A) ----
+	 * Fixed, unique identity per dimension, used identically everywhere a
+	 * dimension is referenced (PipelineDiagram, PipelineFlow,
+	 * AssessmentWorkflow, DimensionCard numbers). Canonicalizes ONE fixed
+	 * mapping across components (user review 2026-10-29); faithfulness
+	 * keeps a dedicated blue since --color-link no longer carries one.
+	 */
+	--dim-coherence: var(--color-focus); /* amber-brown — explanation vs. itself */
+	--dim-validity: #0e6e7c; /* teal — explanation vs. ground truth — ~5.8:1 on bg (was --color-model, too easily read as the site's primary/brand accent — user review 2026-11-02) */
+	--dim-faithfulness: #1d4ed8; /* blue — explanation vs. model — ~6.7:1 on bg */
+
+	/* ---- Ambient background glows ----
+	 * Dark theme used colored radial glows for depth; the light "printed
+	 * page" theme is flat by design, so these resolve to transparent
+	 * (see body background in base.css) but stay defined so nothing
+	 * referencing them breaks.
+	 */
+	--glow-model: transparent;
+	--glow-teal: transparent;
+	--glow-rose: transparent;
+
+	/* ---- Typography (serif headings + sans body — "Minimal Paper") ---- */
+	--font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+	--font-body: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+	--font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+
+	--text-xs: 0.75rem; /* 12px */
+	--text-sm: 0.875rem; /* 14px */
+	--text-base: 1rem; /* 16px */
+	--text-lg: 1.125rem; /* 18px */
+	--text-xl: 1.375rem; /* 22px */
+	--text-2xl: 1.75rem; /* 28px */
+	--text-3xl: 2.25rem; /* 36px */
+	--text-4xl: 3rem; /* 48px */
+
+	--leading-tight: 1.2;
+	--leading-normal: 1.6;
+	--measure: 72ch; /* max line length for readability */
+
+	/* ---- Spacing (4px base scale) ---- */
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-6: 1.5rem;
+	--space-8: 2rem;
+	--space-12: 3rem;
+	--space-16: 4rem;
+	--space-24: 6rem; /* section vertical rhythm */
+
+	/* ---- Radii & shadows ---- */
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-lg: 16px;
+	--shadow-card: 0 0 0 1px var(--color-border);
+	--shadow-raised: 0 0 0 1px var(--color-border), 0 4px 12px rgb(0 0 0 / 0.05);
+
+	/* ---- Motion ---- */
+	--duration-fast: 150ms;
+	--duration-normal: 300ms;
+	--duration-slow: 600ms;
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+	/* ---- Layout ---- */
+	--content-width: 76rem; /* max page width */
+	--navrail-width: 3rem;
+}
+
+/*
+ * Responsive content width — on larger screens the fixed 76rem cap leaves
+ * large empty gutters on both sides. Scale the content up in steps so the
+ * page keeps using the full viewport (user review 2026-11-02). The nav rail
+ * reserves its own column via .container's padding-right, so the content
+ * grows without colliding with it.
+ */
+@media (min-width: 1600px) {
+	:root {
+		--content-width: 88rem;
+	}
+}
+
+@media (min-width: 1920px) {
+	:root {
+		--content-width: 100rem;
+	}
+}
+
+/*
+ * Presenter mode — activated by `data-presenter` on <html> (presenter.ts).
+ * Enlarges type & spacing for projection (DESIGN_PLAN §4).
+ */
+:root[data-presenter='true'] {
+	--text-base: 1.25rem;
+	--text-lg: 1.5rem;
+	--text-xl: 1.875rem;
+	--text-2xl: 2.375rem;
+	--text-3xl: 3rem;
+	--text-4xl: 4rem;
+	--measure: 60ch;
+	--space-24: 8rem;
+}
+
+/*
+ * Reduced motion — users who prefer less motion get instant state changes.
+ * Honored globally; individual animations must also gate on this (base.css).
+ */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--duration-fast: 0ms;
+		--duration-normal: 0ms;
+		--duration-slow: 0ms;
+	}
+}

@@ -1,0 +1,27 @@
+{
+  "$comment": "site.json — global site metadata.",
+  "title": "5 Shades of Wrong",
+  "subtitle": "A common Language on \"Wrong\" AI Explanations.",
+  "kicker": "An interactive companion to the paper",
+  "landing": {
+    "title": "5 Shades of Wrong",
+    "subtitle": "A common Language on \"Wrong\" AI Explanations"
+  },
+  "paper": {
+    "title": "5(0) Shades of Wrong: Toward a Common Language for “Wrong” AI Explanations",
+    "venue": "",
+    "file": "",
+    "label": "Read the paper"
+  },
+  "links": {
+    "scenarios": "#practice",
+    "contact": "mailto:authors@example.edu"
+  },
+  "authors": "Anonymous et al.",
+  "license": "CC BY 4.0",
+  "bibtex": "@misc{shadesofwrong2026,\n  title     = {5(0) Shades of Wrong: Toward a Common Language for \"Wrong\" AI Explanations},\n  author    = {Anonymous},\n  year      = {2026},\n  note      = {Companion site: 5 Shades of Wrong}\n}",
+  "tagline": {
+    "reader": "Scroll to learn: three dimensions, six archetypes, thirteen scenarios.",
+    "presenter": "Present live: click-to-reveal cards, projection-ready sections."
+  }
+}

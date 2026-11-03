@@ -1,0 +1,196 @@
+{
+	"$comment": "archetypes.json — the Perfect Explainer + 5 Shades of Wrong. Source: paper p.9 and p.29 (husky/wolf figure). Colors reference the paper legend: purple=model-used, green/red=highlighted, gray=unimportant.",
+	"legend": {
+		"relevant": {
+			"label": "Relevant features",
+			"color": "var(--color-model-soft)"
+		},
+		"unimportant": {
+			"label": "Unimportant features",
+			"color": "var(--color-neutral)"
+		}
+	},
+	"archetypes": [
+		{
+			"id": "perfect-explainer",
+			"letter": "a",
+			"name": "Perfect Explainer",
+			"verdict": "correct",
+			"summary": "The explanation highlights the features the model actually used, and those features are the right reasons.",
+			"prediction": "Wolf",
+			"explanation": "The image shows a wolf because of the shape and the moon.",
+			"groundTruthFeature": "shape and moon",
+			"modelUsed": "shape and moon",
+			"highlighted": "shape and moon",
+			"coherent": true,
+			"valid": true,
+			"faithful": true,
+			"scene": {
+				"moons": 1,
+				"used": {
+					"wolf": true,
+					"sky": false,
+					"leftMoon": true,
+					"rightMoon": false
+				},
+				"highlight": {
+					"wolf": true,
+					"sky": false,
+					"leftMoon": true,
+					"rightMoon": false
+				}
+			}
+		},
+		{
+			"id": "perfect-liar",
+			"letter": "b",
+			"name": "Perfect Liar",
+			"verdict": "wrong",
+			"summary": "The explanation is coherent and valid on its face, but completely unfaithful: it hides what the model really used.",
+			"prediction": "Wolf",
+			"explanation": "The image shows a wolf because of the shape.",
+			"groundTruthFeature": "shape and moon",
+			"modelUsed": "background",
+			"highlighted": "shape and moon",
+			"coherent": true,
+			"valid": true,
+			"faithful": false,
+			"scene": {
+				"moons": 1,
+				"used": {
+					"wolf": false,
+					"sky": true,
+					"leftMoon": false,
+					"rightMoon": false
+				},
+				"highlight": {
+					"wolf": true,
+					"sky": false,
+					"leftMoon": true,
+					"rightMoon": false
+				}
+			}
+		},
+		{
+			"id": "illuminator",
+			"letter": "c",
+			"name": "Illuminator",
+			"verdict": "wrong",
+			"summary": "The explanation faithfully shows what the model used — but what the model used is the wrong reason (spurious correlation).",
+			"prediction": "Husky",
+			"explanation": "The image shows a husky because of the background.",
+			"groundTruthFeature": "shape and moon",
+			"modelUsed": "background",
+			"highlighted": "background",
+			"coherent": true,
+			"valid": false,
+			"faithful": true,
+			"scene": {
+				"moons": 1,
+				"highlightBad": true,
+				"used": {
+					"wolf": false,
+					"sky": true,
+					"leftMoon": false,
+					"rightMoon": false
+				},
+				"highlight": {
+					"wolf": false,
+					"sky": true,
+					"leftMoon": false,
+					"rightMoon": false
+				}
+			}
+		},
+		{
+			"id": "confused-illuminator",
+			"letter": "d",
+			"name": "Cassandra",
+			"verdict": "wrong",
+			"summary": "The model used the wrong reason, and the explanation highlights something else entirely — wrong on both counts.",
+			"prediction": "Husky",
+			"explanation": "The image shows a husky because of the 2 moons.",
+			"groundTruthFeature": "shape and moon",
+			"modelUsed": "2 moons",
+			"highlighted": "2 moons",
+			"coherent": false,
+			"valid": false,
+			"faithful": true,
+			"scene": {
+				"moons": 2,
+				"used": {
+					"wolf": false,
+					"sky": false,
+					"leftMoon": true,
+					"rightMoon": true
+				},
+				"highlight": {
+					"wolf": false,
+					"sky": false,
+					"leftMoon": true,
+					"rightMoon": true
+				}
+			}
+		},
+		{
+			"id": "storyteller",
+			"letter": "e",
+			"name": "Storyteller",
+			"verdict": "wrong",
+			"summary": "The explanation tells a plausible story that matches neither the prediction nor the model's actual reasoning.",
+			"prediction": "Wolf",
+			"explanation": "The image shows a husky because of the background.",
+			"groundTruthFeature": "shape and moon",
+			"modelUsed": "shape",
+			"highlighted": "background",
+			"coherent": true,
+			"valid": false,
+			"faithful": false,
+			"scene": {
+				"moons": 1,
+				"used": {
+					"wolf": true,
+					"sky": false,
+					"leftMoon": false,
+					"rightMoon": false
+				},
+				"highlight": {
+					"wolf": false,
+					"sky": true,
+					"leftMoon": false,
+					"rightMoon": false
+				}
+			}
+		},
+		{
+			"id": "hallucinator",
+			"letter": "f",
+			"name": "Hallucinator",
+			"verdict": "wrong",
+			"summary": "The explanation contradicts itself and the prediction — internally incoherent.",
+			"prediction": "Wolf",
+			"explanation": "The image shows a husky because of the 2 moons.",
+			"groundTruthFeature": "shape and moon",
+			"modelUsed": "shape",
+			"highlighted": "2 moons",
+			"coherent": false,
+			"valid": false,
+			"faithful": false,
+			"scene": {
+				"moons": 2,
+				"used": {
+					"wolf": true,
+					"sky": false,
+					"leftMoon": false,
+					"rightMoon": false
+				},
+				"highlight": {
+					"wolf": false,
+					"sky": false,
+					"leftMoon": true,
+					"rightMoon": true
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,126 @@
+---
+import './ScenarioCard.css';
+import type { Scenario } from '../schemas/schemas';
+
+
+const { scenario } = Astro.props;
+
+const rankOptions = [1, 2, 3, 4, 5, 6];
+---
+/**
+ * ScenarioCard.astro — one practice scenario (§5)
+ * ---------------------------------------------
+ * Renders one scenario from the JSON data as a click-to-reveal card following
+ * the paper's 4-block structure:
+ *   Context → What the explainee sees → Ground truth → Actual model behavior
+ * plus the ranking task from p.11 (rank C/V/F 1–6) and an optional archetype
+ * answer (null until the authors provide official rankings — open decision #4).
+ *
+ * Reveal behavior is implemented with native <details> elements: fully
+ * keyboard-accessible, works without JS, and scenario.ts only adds
+ * presenter-mode niceties (e.g., "reveal all" per card). No JS-hidden content.
+ *
+ * Security: typed JSON data; all strings auto-escaped; ranking inputs are
+ * native <select> elements with fixed options (no free-form input to sanitize).
+ */
+
+interface Props {
+	scenario: Scenario;
+}
+
+
+// Ranking options 1–6 as in the paper's task (p.11):
+// 1 = coherent/valid/faithful … 6 = incoherent/invalid/unfaithful.
+
+<article class="scenario-card" id={`scenario-${scenario.id}`} data-scenario={scenario.id}>
+	<header class="card-head">
+		<h3>Scenario {scenario.id}</h3>
+	</header>
+
+	<!-- Block 0: context is always visible (the paper's step 0) -->
+	<!-- Context comes from the parent set intro; per-scenario context is identical within a set -->
+
+	<!-- Block 1: what the explainee sees -->
+	<details class="block" open>
+		<summary><span class="step-tag">1</span> What the explainee sees</summary>
+		<div class="block-body">
+			<p><strong>Output of the AI model:</strong> {scenario.seen.output}</p>
+			<p><strong>Explanation:</strong> {scenario.seen.explanation}</p>
+		</div>
+	</details>
+
+	<!-- Block 2: ground truth -->
+	<details class="block">
+		<summary><span class="step-tag">2</span> Ground truth</summary>
+		<div class="block-body">
+			<p><strong>Outcome:</strong> {scenario.groundTruth.outcome}</p>
+			<p><strong>Premise:</strong> {scenario.groundTruth.premise}</p>
+		</div>
+	</details>
+
+	<!-- Block 3: actual model behavior -->
+	<details class="block">
+		<summary><span class="step-tag">3</span> Actual model behavior</summary>
+		<div class="block-body">
+			<p>{scenario.modelBehavior}</p>
+		</div>
+	</details>
+
+	<!-- Ranking task (p.11) — gated behind a button (user review 2026-10-19):
+	     the assessment only appears when the user asks for it. -->
+	<fieldset class="ranking">
+		<legend>Your assessment — rank from 1 (fine) to 6 (worst)</legend>
+		<div class="rank-row">
+			<label>
+				Coherence
+				<select data-rank="coherence">
+					{rankOptions.map((n) => <option value={n}>{n}</option>)}
+				</select>
+			</label>
+			<label>
+				Validity
+				<select data-rank="validity">
+					{rankOptions.map((n) => <option value={n}>{n}</option>)}
+				</select>
+			</label>
+			<label>
+				Faithfulness
+				<select data-rank="faithfulness">
+					{rankOptions.map((n) => <option value={n}>{n}</option>)}
+				</select>
+			</label>
+		</div>
+		<button type="button" class="assess-btn" data-assess-btn>
+			Show my assessment
+			<svg class="btn-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+				<path d="M2 7h9M8 3.5 11.5 7 8 10.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+		<p class="ranking-hint" data-ranking-hint hidden>
+			Rank all three dimensions, then press the button.
+		</p>
+	</fieldset>
+
+	<!-- Assessment response — populated by scenario.ts on button click.
+	     No backend: the verdict is computed client-side from the user's own
+	     selections (the site does not know official answers — decision #4). -->
+	<div class="assessment" data-assessment hidden>
+		<p class="assessment-verdict" data-assessment-verdict></p>
+		<p class="assessment-detail" data-assessment-detail></p>
+		<p class="assessment-next">
+			Compare with the <a href="#archetypes">six archetypes</a> to see which
+			shade of wrong this is.
+		</p>
+	</div>
+
+	<!-- Archetype answer — only rendered when provided (open decision #4) -->
+	{
+		scenario.archetype && (
+			<p class="archetype-answer">
+				Archetype: <strong>{scenario.archetype}</strong>
+			</p>
+		)
+	}
+</article>
+
+

@@ -1,0 +1,189 @@
+/* Styles for HeroSection.astro — extracted per review 2026-10-26 */
+
+	.hero {
+		min-height: 92vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		position: relative;
+	}
+
+	/* Stacked hero: copy on top (centered), full-width diagram below.
+	   The PipelineFlow needs horizontal room for its callout boxes. */
+	.hero-grid {
+		display: grid;
+		gap: var(--space-12);
+		width: 100%;
+	}
+
+	.hero-copy {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.kicker {
+		color: var(--color-model);
+		font-size: var(--text-sm);
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		font-weight: 600;
+	}
+
+	h1 {
+		font-size: clamp(2.75rem, 6vw, 4.5rem);
+		margin-top: var(--space-4);
+		color: var(--color-text);
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+	}
+
+	.lede {
+		margin-top: var(--space-6);
+		font-size: var(--text-2xl);
+		color: var(--color-text-muted);
+		max-width: 30ch;
+		line-height: 1.35;
+	}
+
+	.tagline {
+		margin-top: var(--space-8);
+		color: var(--color-text-faint);
+		font-size: var(--text-sm);
+	}
+
+	/* ---- Full-width diagram below the copy ---- */
+	.hero-visual {
+		width: 100%;
+	}
+
+	/* Title above the assessment flow — needs its own breathing room
+	   (user review 2026-10-28: sat too close to the teaser above);
+	   font-size reduced per follow-up review (was --text-xl). Moved
+	   here with the flow ladder per user review 2026-10-29. */
+	.flow-title {
+		margin-top: var(--space-16);
+		font-size: var(--text-lg);
+	}
+
+	/* Explains the color pairing between the ladder and the diagram above
+	   (user review 2026-10-29). */
+	.flow-subtitle {
+		margin-top: var(--space-2);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+
+	/* ---- Assessment flow ladder ---- */
+	.assess-flow {
+		margin-top: var(--space-6);
+		padding: 0;
+		list-style: none;
+		display: grid;
+		/* 2×2 arrangement (user review): steps 0→1 fill the LEFT column,
+		   steps 2→3 the RIGHT — halves the vertical space of the ladder. */
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: repeat(2, auto);
+		grid-auto-flow: column;
+		gap: var(--space-4);
+		/* Full container width — matches the PipelineFlow diagram above,
+		   which also spans the full .container (user review 2026-10-29).
+		   Was capped at 56rem, narrower than the diagram. */
+		width: 100%;
+	}
+
+	/* Each step is color-coded to match its corresponding callout in the
+	   PipelineFlow diagram above (user review 2026-10-29), so the ladder
+	   reads as "step-by-step through that diagram" rather than a separate
+	   component: context = neutral, explanation = gold, ground truth =
+	   purple, model behavior = blue. */
+	.flow-step {
+		display: flex;
+		gap: var(--space-4);
+		align-items: flex-start;
+		padding: var(--space-4) var(--space-6);
+		background: var(--color-bg-raised);
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		/* No hover highlight: these are informational, not clickable
+		   (user review 2026-10-26 — hover affordance confused users). */
+	}
+
+	.flow-step-seen {
+		border-color: var(--color-focus);
+	}
+
+	.flow-step-seen h4 {
+		color: var(--color-focus);
+	}
+
+	.flow-step-truth {
+		border-color: var(--color-model);
+	}
+
+	.flow-step-truth h4 {
+		color: var(--color-model);
+	}
+
+	.flow-step-behavior {
+		border-color: var(--color-link);
+	}
+
+	.flow-step-behavior h4 {
+		color: var(--color-link);
+	}
+
+	.flow-number {
+		flex-shrink: 0;
+		display: grid;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 50%;
+		border: 2px solid var(--color-border);
+		color: var(--color-text-muted);
+		font-family: var(--font-mono);
+		font-weight: 600;
+	}
+
+	.flow-step-seen .flow-number {
+		border-color: var(--color-focus);
+		color: var(--color-focus);
+	}
+
+	.flow-step-truth .flow-number {
+		border-color: var(--color-model);
+		color: var(--color-model);
+	}
+
+	.flow-step-behavior .flow-number {
+		border-color: var(--color-link);
+		color: var(--color-link);
+	}
+
+	.flow-step h4 {
+		font-size: var(--text-base);
+	}
+
+	.flow-step p {
+		margin-top: var(--space-1);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+
+	/* ---- Mobile: back to a single vertical ladder ---- */
+	@media (max-width: 760px) {
+		.assess-flow {
+			grid-template-columns: 1fr;
+			grid-auto-flow: row;
+			max-width: 44rem;
+		}
+	}
+
+	/* ---- Mobile: hero grid gap ---- */
+	@media (max-width: 900px) {
+		.hero-grid {
+			gap: var(--space-8);
+		}
+	}

@@ -1,0 +1,159 @@
+/* Styles for ArchetypeGallery.astro — extracted per review 2026-10-26 */
+
+	.intro {
+		margin-top: var(--space-4);
+		font-size: var(--text-lg);
+		color: var(--color-text-muted);
+		max-width: 52ch;
+	}
+
+	/* ---- Paper legend ---- */
+	.legend {
+		margin-top: var(--space-6);
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-4);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	.legend li {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+	}
+
+	.swatch {
+		width: 12px;
+		height: 12px;
+		border-radius: 3px;
+		display: inline-block;
+	}
+
+	/* ---- Gallery grid ---- */
+	.gallery {
+		margin-top: var(--space-8);
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+		gap: var(--space-6);
+	}
+
+	.archetype {
+		background: var(--color-bg-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
+
+	.archetype.correct {
+		border-color: color-mix(in srgb, var(--color-positive) 55%, var(--color-border));
+	}
+
+	.archetype header {
+		display: flex;
+		align-items: baseline;
+		gap: var(--space-2);
+	}
+
+	.letter {
+		font-family: var(--font-mono);
+		color: var(--color-model);
+	}
+
+	/* ---- Abstract placeholder visual (husky/wolf scene) ---- */
+	.story .frame {
+		position: relative;
+		height: 5.5rem;
+		border-radius: var(--radius-md);
+		background: linear-gradient(180deg, #1c2436 0%, #141a28 100%);
+		border: 1px solid var(--color-border);
+		overflow: hidden;
+	}
+
+	.moon {
+		position: absolute;
+		top: 18%;
+		right: 22%;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		background: var(--color-model);
+		opacity: 0.85;
+	}
+
+	.ground {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 26%;
+		background: var(--color-neutral);
+		opacity: 0.25;
+	}
+
+	.prediction {
+		margin-top: var(--space-2);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	.explanation {
+		font-style: italic;
+		font-size: var(--text-sm);
+	}
+
+	.summary {
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+
+	/* ---- Facts + verdict chips ---- */
+	.facts {
+		display: grid;
+		gap: var(--space-2);
+		font-size: var(--text-sm);
+	}
+
+	.facts dt {
+		color: var(--color-text-faint);
+		font-size: var(--text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+	}
+
+	.facts dd {
+		margin: 0;
+	}
+
+	.chips {
+		margin-top: auto;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		gap: var(--space-2);
+		flex-wrap: wrap;
+	}
+
+	.chips li {
+		font-size: var(--text-xs);
+		font-family: var(--font-mono);
+		padding: 2px 10px;
+		border-radius: 999px;
+		border: 1px solid var(--color-border);
+		color: var(--color-text-muted);
+	}
+
+	.chips li.yes {
+		border-color: var(--color-positive);
+		color: var(--color-positive);
+	}
+
+	.chips li.no {
+		border-color: var(--color-negative);
+		color: var(--color-negative);
+	}

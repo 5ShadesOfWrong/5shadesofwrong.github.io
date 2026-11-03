@@ -1,0 +1,185 @@
+/* Styles for ScenarioCard.astro — extracted per review 2026-10-26 */
+
+	.scenario-card {
+		background: var(--color-bg-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: var(--space-6);
+		scroll-margin-top: var(--space-8);
+	}
+
+	.card-head h3 {
+		font-size: var(--text-lg);
+		color: var(--color-model);
+	}
+
+	/* ---- Reveal blocks ---- */
+	.block {
+		margin-top: var(--space-3);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-bg);
+	}
+
+	.block summary {
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+		padding: var(--space-3) var(--space-4);
+		cursor: pointer;
+		font-weight: 600;
+		list-style: none; /* custom marker via .step-tag */
+	}
+
+	.block summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.block summary::after {
+		content: '+';
+		margin-left: auto;
+		font-family: var(--font-mono);
+		color: var(--color-text-faint);
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	.block[open] summary::after {
+		transform: rotate(45deg);
+	}
+
+	.step-tag {
+		display: inline-grid;
+		place-items: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		border: 1px solid var(--color-border);
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		color: var(--color-text-muted);
+	}
+
+	.block-body {
+		padding: 0 var(--space-4) var(--space-4);
+		display: grid;
+		gap: var(--space-2);
+		color: var(--color-text-muted);
+	}
+
+	.block-body strong {
+		color: var(--color-text);
+	}
+
+	/* ---- Ranking task ---- */
+	.ranking {
+		margin-top: var(--space-6);
+		border: 1px dashed var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--space-4);
+	}
+
+	.ranking legend {
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+		padding-inline: var(--space-2);
+	}
+
+	.rank-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-4);
+	}
+
+	.rank-row label {
+		display: grid;
+		gap: var(--space-1);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	.rank-row select {
+		background: var(--color-bg-overlay);
+		color: var(--color-text);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: var(--space-1) var(--space-2);
+		font-family: var(--font-mono);
+	}
+
+	/* ---- Assess button (ghost style — matches the design system) ---- */
+	.assess-btn {
+		margin-top: var(--space-4);
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-5);
+		background: transparent;
+		color: var(--color-link);
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		font-weight: 600;
+		font-size: var(--text-sm);
+		cursor: pointer;
+		transition: color var(--duration-fast) var(--ease-out),
+			border-color var(--duration-fast) var(--ease-out),
+			background var(--duration-fast) var(--ease-out);
+	}
+
+	.assess-btn:hover {
+		color: var(--color-text);
+		border-color: var(--color-model);
+		background: color-mix(in srgb, var(--color-model) 10%, transparent);
+	}
+
+	.assess-btn:active {
+		transform: translateY(1px);
+	}
+
+	.btn-arrow {
+		transition: transform var(--duration-fast) var(--ease-out);
+	}
+
+	.assess-btn:hover .btn-arrow {
+		transform: translateX(3px);
+	}
+
+	.ranking-hint {
+		margin-top: var(--space-3);
+		font-size: var(--text-sm);
+		color: var(--color-text-faint);
+	}
+
+	/* ---- Assessment response ---- */
+	.assessment {
+		margin-top: var(--space-4);
+		padding: var(--space-4) var(--space-6);
+		border-radius: var(--radius-md);
+		background: var(--color-bg-overlay);
+		border-left: 3px solid var(--color-model);
+	}
+
+	.assessment-verdict {
+		font-weight: 600;
+		font-size: var(--text-base);
+	}
+
+	.assessment-detail {
+		margin-top: var(--space-2);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+
+	.assessment-next {
+		margin-top: var(--space-2);
+		color: var(--color-text-faint);
+		font-size: var(--text-sm);
+	}
+
+	/* Card tint responds to the user's overall ranking */
+	.scenario-card.rank-good {
+		border-color: color-mix(in srgb, var(--color-positive) 55%, var(--color-border));
+	}
+
+	.scenario-card.rank-bad {
+		border-color: color-mix(in srgb, var(--color-negative) 55%, var(--color-border));
+	}

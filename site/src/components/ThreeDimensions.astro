@@ -1,0 +1,93 @@
+---
+import './ThreeDimensions.css';
+import dimensions from '../data/dimensions.json';
+import type { DimensionsData } from '../schemas/schemas';
+
+const data = dimensions as unknown as DimensionsData;
+const baseline = data.positiveBaseline;
+const dimensionList = data.dimensions;
+/**
+ * ThreeDimensions.astro — §2 The Three Dimensions (table layout, user review 2026-10-29)
+ * ------------------------------------------------------------------------------
+ * Mirrors the paper's dimensions/examples table:
+ *   [ Positive baseline card — shared credit-scoring explanation ]
+ *   [ Coherence ] [ Validity ] [ Faithfulness ]  ← name + relationship
+ *   [ per-dimension rationale for why the baseline holds ]
+ *   [ Negative examples — collapsible <details> per dimension ]
+ *
+ * Security: data from typed JSON; auto-escaped rendering.
+ */
+---
+
+<section id="three-dimensions" class="section" aria-labelledby="dimensions-title">
+	<div class="container">
+		<h2 id="dimensions-title" data-reveal>The Three Dimensions</h2>
+		<p class="intro" data-reveal data-reveal-delay="1">
+			An explanation can be judged against three reference points — each one a
+			different way of being wrong. Usually you can only observe the explanation
+			itself, so start there and work outward.
+		</p>
+
+		{/* ---- Positive baseline (shared running example, table row 1) ---- */}
+		<div class="baseline" data-reveal data-reveal-delay="2">
+			<h3 class="baseline-title">{baseline.title}</h3>
+			<blockquote class="baseline-quote">
+				&ldquo;{baseline.explanation}&rdquo;
+			</blockquote>
+			<p class="baseline-context">{baseline.context}</p>
+		</div>
+
+		{/* ---- Three dimension columns: name + relationship + baseline rationale ---- */}
+		<div class="dimension-cards">
+			{
+				dimensionList.map((dimension, i) => (
+					<article class="dimension-col" id={`dimension-${dimension.id}`} aria-labelledby={`dimension-${dimension.id}-title`} data-reveal data-reveal-delay={i}>
+						<header class="dimension-head">
+							<span class="dimension-number" aria-hidden="true">{dimension.number}</span>
+							<div>
+								<h3 id={`dimension-${dimension.id}-title`}>{dimension.name}</h3>
+								<p class="relationship">{dimension.relationship}</p>
+							</div>
+						</header>
+
+						<p class="baseline-why">{dimension.baselineWhy}</p>
+
+						{/* First negative example shown by default in a red-bordered
+						    box (user review 2026-11-02); the rest stay collapsible. */}
+						{
+							dimension.facets[0] && (
+								<div class="neg-example">
+									<span class="neg-example-label">Negative example</span>
+									<p><strong>{dimension.facets[0].name}:</strong> {dimension.facets[0].example}</p>
+								</div>
+							)
+						}
+
+						{/* Remaining negative examples — collapsible, same pattern as the old facets */}
+						{
+							dimension.facets.length > 1 && (
+								<details class="negatives">
+									<summary>
+										More negative examples
+										
+									</summary>
+									<ul>
+										{
+											dimension.facets.slice(1).map((ex) => (
+												<li>
+													<strong>{ex.name}:</strong> {ex.example}
+												</li>
+											))
+										}
+									</ul>
+								</details>
+							)
+						}
+					</article>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<script src="../scripts/equalize-dimension-cards.ts"></script>

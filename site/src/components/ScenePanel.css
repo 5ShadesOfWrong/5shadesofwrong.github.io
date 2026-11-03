@@ -1,0 +1,183 @@
+/* Styles for ScenePanel.astro — the shared wolf-scene panel.
+   Extracted from ArchetypeViewer.css so the hero's Perfect Explainer and the
+   5 Shades viewer render the identical scene system (user review 2026-10-28). */
+
+.scene-figure {
+	margin: 0;
+}
+
+.scene {
+	position: relative; /* anchors the absolutely-positioned wolf layer */
+	aspect-ratio: 240 / 200;
+	overflow: hidden;
+	border-radius: var(--radius-md);
+	border: 2px solid var(--color-border);
+}
+
+/* Panel borders follow the §2 scheme colors (user review 2026-10-28):
+   Ground Truth = purple (model color), Explanation = green (positive),
+   Prediction = blue (link color). Border only — the scenes stay neutral. */
+.scene-truth {
+	border-color: var(--color-model);
+}
+
+.scene-explanation {
+	border-color: var(--color-positive);
+}
+
+.scene-prediction {
+	border-color: var(--color-link);
+}
+
+.scene svg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* ---- Scene parts ---- */
+.sky {
+	fill: var(--color-bg-overlay);
+	transition: fill var(--duration-normal) var(--ease-out);
+}
+
+/* Background used/highlighted → tint the whole sky (paper-style).
+   A diluted mix (not the solid accent) keeps a full-panel wash from
+   reading as "heavy" (user review 2026-11-02). */
+.sky.feat-used {
+	fill: color-mix(in srgb, var(--color-model) 30%, var(--color-bg-overlay));
+}
+
+.sky.feat-hl-good {
+	fill: color-mix(in srgb, var(--color-positive) 30%, var(--color-bg-overlay));
+}
+
+.sky.feat-hl-bad {
+	fill: color-mix(in srgb, var(--color-negative) 30%, var(--color-bg-overlay));
+}
+
+.moon .moon-disc {
+	/* Unused features are painted BLACK (user review 2026-10-21) */
+	fill: #000000;
+	opacity: 1;
+	transition: fill var(--duration-normal) var(--ease-out),
+		opacity var(--duration-normal) var(--ease-out);
+}
+
+.moon .crater {
+	fill: var(--color-bg-overlay);
+	opacity: 0.6;
+}
+
+/* Feature states (paper legend): purple = used, green = honest highlight,
+   red = misleading highlight, black = unused/unimportant.
+   The state class sits ON the <g class="moon"> element (compound selector
+   `.moon.feat-x`), styling the .moon-disc inside it. */
+.moon.feat-used .moon-disc {
+	fill: var(--color-model-soft);
+	opacity: 1;
+}
+
+.moon.feat-hl-good .moon-disc {
+	fill: var(--color-positive);
+	opacity: 1;
+}
+
+.moon.feat-hl-bad .moon-disc {
+	fill: var(--color-negative);
+	opacity: 1;
+}
+
+.ground {
+	fill: var(--color-neutral);
+	opacity: 0.18;
+}
+
+.wolf {
+	display: block;
+	position: absolute;
+	left: 50%;
+	bottom: 4%;
+	transform: translateX(-50%);
+	width: 62%; /* fits inside the panel, above the ground strip */
+	aspect-ratio: 1 / 1;
+	/* Unused feature → painted black (user review 2026-10-21) */
+	background-color: #000000;
+	opacity: 1;
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center bottom;
+	-webkit-mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center bottom;
+	transition: background-color var(--duration-normal) var(--ease-out),
+		opacity var(--duration-normal) var(--ease-out);
+}
+
+.wolf.feat-used {
+	background-color: var(--color-model-soft);
+	opacity: 1;
+}
+
+.wolf.feat-hl-good {
+	background-color: var(--color-positive);
+	opacity: 1;
+}
+
+.wolf.feat-hl-bad {
+	background-color: var(--color-negative);
+	opacity: 1;
+}
+
+/* Scheme icon badge (user review 2026-10-28): the same node icon as the
+   §2 scheme, overlaid on each scene's corner — globe (Ground Truth),
+   bar chart (Explanation), AI chip (Prediction) — tinted with the panel
+   color so the badge, border, and scheme node all read as one system. */
+.scene-badge {
+	position: absolute;
+	top: 6px;
+	left: 6px;
+	width: 26px;
+	height: 26px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+	border-radius: var(--radius-sm);
+	pointer-events: none;
+}
+
+.scene-badge svg {
+	width: 18px;
+	height: 18px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2.5;
+}
+
+.scene-badge .bar {
+	fill: currentColor;
+	stroke: none;
+}
+
+.scene-badge .chip-text {
+	fill: currentColor;
+	stroke: none;
+	font-family: var(--font-mono);
+	font-size: 9px;
+	font-weight: 700;
+}
+
+/* Panel-tinted badge colors, matching the border classes above. */
+.scene-truth .scene-badge {
+	color: var(--color-model);
+}
+
+.scene-explanation .scene-badge {
+	color: var(--color-positive);
+}
+
+.scene-prediction .scene-badge {
+	color: var(--color-link);
+}

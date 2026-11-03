@@ -1,0 +1,44 @@
+/* Styles for Takeaway.astro — extracted per review 2026-10-26 */
+
+	.message {
+		margin-top: var(--space-8);
+		max-width: 56ch;
+	}
+
+	.big {
+		font-family: var(--font-display);
+		font-size: var(--text-2xl);
+		line-height: var(--leading-tight);
+	}
+
+	.big em {
+		color: var(--color-model);
+		font-style: normal;
+		border-bottom: 2px solid var(--color-model);
+	}
+
+	.support {
+		margin-top: var(--space-6);
+		color: var(--color-text-muted);
+	}
+
+	.support strong {
+		color: var(--color-text);
+	}
+
+	.calibration {
+		margin-top: var(--space-12);
+		padding: var(--space-8);
+		background: var(--color-bg-raised);
+		border: 1px solid color-mix(in srgb, var(--color-model) 45%, var(--color-border));
+		border-radius: var(--radius-lg);
+		max-width: 56ch;
+	}
+
+	.calibration h3 {
+		color: var(--color-model);
+	}
+
+	.calibration p {
+		margin-top: var(--space-3);
+	}

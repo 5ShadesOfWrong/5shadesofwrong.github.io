@@ -1,0 +1,128 @@
+---
+import './PipelineFlow.css';
+
+/**
+ * PipelineFlow.astro — the paper's central diagram, rebuilt in HTML/CSS
+ * (user review 2026-10-21: match the paper figure — three nodes with icons,
+ * labeled arrows, numbered callout boxes, and lightning stickers).
+ *
+ * Layout (mirrors the paper figure, plus a context row):
+ *   - Top: neutral callout "Read the context" (precedes the split below)
+ *   - Below it: green callout "1. What the explainee sees"
+ *   - Middle row: Ground Truth —(Machine Learning)→ Explanation ←(XAI Method)— AI Model
+ *   - Stickers: 2. Validity (under the left arrow), 1. Coherence (above the
+ *     chart, with the loop arrow), 3. Faithfulness (under the right arrow)
+ *   - Left: purple callout "2. Ground truth" · Right: blue callout "3. Actual model behavior"
+ *
+ * Security: purely static markup; no dynamic content is injected.
+ */
+---
+
+<figure class="flow">
+	{/* ---- 0. Read the context + 1. What the explainee sees (top) ----
+	     Stacked in one wrapper so both callouts share the same width
+	     (user review 2026-10-29 — "Read the context" must match the
+	     width of "What the explainee sees"). Each callout reveals on
+	     its own as the user scrolls (user review 2026-11-02). ---- */}
+	<div class="callout-stack">
+		<div class="callout callout-context" data-reveal data-reveal-delay="1">
+			<h3>0.Read the context</h3>
+		
+			<strong>Scenario:</strong> What is the AI system, its purpose, and who engages with the explanation?
+			
+		</div>
+
+		<div class="callout callout-seen" data-reveal data-reveal-delay="2">
+			<h3>1. Coherence — What the explainee sees</h3>
+			<strong>Explanation:</strong> What does the XAI method show as an explanation?
+		</div>
+	</div>
+
+	{/* ---- 2. Ground truth (left, purple) ---- */}
+	<div class="callout callout-truth" data-reveal data-reveal-delay="3">
+		<h3>2. Validity — Ground truth</h3>
+		<p><strong>Outcome:</strong> What would be the true prediction?</p>
+		<p><strong>Premise:</strong> What are the causal assumptions for predictions?</p>
+	</div>
+
+	{/* ---- Central flow: Ground Truth → Explanation ← AI Model ---- */}
+	<div class="track" data-reveal data-reveal-delay="4">
+		<div class="node">
+			<svg class="icon" viewBox="0 0 48 48" aria-hidden="true">
+				<circle cx="24" cy="24" r="18" />
+				<ellipse cx="24" cy="24" rx="8" ry="18" />
+				<line x1="6" y1="24" x2="42" y2="24" />
+			</svg>
+			<span class="node-label">Ground Truth</span>
+		</div>
+
+		<div class="arrow">
+			<span class="arrow-name">Machine Learning</span>
+			<svg class="line" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
+				<line x1="2" y1="7" x2="106" y2="7" class="shaft" vector-effect="non-scaling-stroke" />
+				<polygon points="106,1.5 120,7 106,12.5" class="head" />
+			</svg>
+			<span class="sticker sticker-validity">
+				<svg class="bolt" viewBox="0 0 12 16" aria-hidden="true"><path d="M7.5 0 L1 9 H4.5 L3.5 16 L11 6 H6.5 Z" /></svg>
+				2. Validity
+			</span>
+		</div>
+
+		<div class="node node-chart">
+			<div class="node-chart-topper">
+				<span class="sticker sticker-coherence">
+					<svg class="bolt" viewBox="0 0 12 16" aria-hidden="true"><path d="M7.5 0 L1 9 H4.5 L3.5 16 L11 6 H6.5 Z" /></svg>
+					1. Coherence
+				</span>
+				<svg class="loop" viewBox="0 0 20 20" aria-hidden="true">
+					<path d="M17 10 a7 7 0 1 1 -3.2 -5.9" />
+					<polygon points="12.5,1.5 18.5,4.5 13,8.5" />
+				</svg>
+			</div>
+			<svg class="icon" viewBox="0 0 48 48" aria-hidden="true">
+				<rect x="6" y="10" width="7" height="30" class="bar" />
+				<rect x="17" y="18" width="7" height="22" class="bar" />
+				<rect x="28" y="26" width="7" height="14" class="bar" />
+				<rect x="39" y="32" width="7" height="8" class="bar" />
+			</svg>
+			<span class="node-label">Explanation</span>
+		</div>
+
+		<div class="arrow">
+			<span class="arrow-name">XAI Method</span>
+			<svg class="line" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true">
+				<line x1="14" y1="7" x2="118" y2="7" class="shaft" vector-effect="non-scaling-stroke" />
+				<polygon points="14,1.5 0,7 14,12.5" class="head" />
+			</svg>
+			<span class="sticker sticker-faithfulness">
+				<svg class="bolt" viewBox="0 0 12 16" aria-hidden="true"><path d="M7.5 0 L1 9 H4.5 L3.5 16 L11 6 H6.5 Z" /></svg>
+				3. Faithfulness
+			</span>
+		</div>
+
+		<div class="node">
+			<svg class="icon" viewBox="0 0 48 48" aria-hidden="true">
+				<rect x="12" y="12" width="24" height="24" rx="4" />
+				<text x="24" y="29" text-anchor="middle" class="chip-text">AI</text>
+				<line x1="17" y1="5" x2="17" y2="12" /><line x1="24" y1="5" x2="24" y2="12" /><line x1="31" y1="5" x2="31" y2="12" />
+				<line x1="17" y1="36" x2="17" y2="43" /><line x1="24" y1="36" x2="24" y2="43" /><line x1="31" y1="36" x2="31" y2="43" />
+				<line x1="5" y1="17" x2="12" y2="17" /><line x1="5" y1="24" x2="12" y2="24" /><line x1="5" y1="31" x2="12" y2="31" />
+				<line x1="36" y1="17" x2="43" y2="17" /><line x1="36" y1="24" x2="43" y2="24" /><line x1="36" y1="31" x2="43" y2="31" />
+			</svg>
+			<span class="node-label">AI Model</span>
+		</div>
+	</div>
+
+	{/* ---- 3. Actual model behavior (right, blue) ---- */}
+	<div class="callout callout-behavior" data-reveal data-reveal-delay="5">
+		<h3>3. Faithfulness — Actual model behavior</h3>
+		<p>
+			<strong>Output of the AI model:</strong> What does the AI model show as the output?
+		</p>
+		<p>
+			<strong>Functioning/Behavior:</strong> How did the model actually come to this output?
+		</p>
+	</div>
+</figure>
+
+

@@ -1,0 +1,51 @@
+{
+	"$comment": "scenarios.banking.json - Set A: credit-scoring scenarios. Source: paper p.13-19. Trimmed to 3 representative scenarios per user review 2026-10-19 (full set kept in git history). Archetype field stays null pending authors' answers (open decision #4).",
+	"setId": "banking",
+	"setTitle": "Set A - Credit Scoring",
+	"setIntro": "An AI credit-scoring system approves or declines credit card applications based on a score between 0 and 1. A loan officer reviews applications, deciding whether to appeal. She has access to the file but not the model.",
+	"context": {
+		"domain": "Banking. An AI credit-scoring system approves or declines credit card applications based on a score between 0 and 1.",
+		"explainee": "A loan officer reviews applications, deciding whether to appeal it. She has access to the file but not the model."
+	},
+	"scenarios": [
+		{
+			"id": "A1",
+			"seen": {
+				"output": "Declined with score 0.31",
+				"explanation": "A ranked list of feature importance: Main drivers are (1) monthly_income=$1,500 and (2) late_payments=2."
+			},
+			"groundTruth": {
+				"outcome": "Given a low income and late payments, the applicant would be highly unlikely to repay the loan.",
+				"premise": "Income and payment history are important predictors of creditworthiness."
+			},
+			"modelBehavior": "The model primarily used the applicant's age and postal code.",
+			"archetype": null
+		},
+		{
+			"id": "A2",
+			"seen": {
+				"output": "Approved with score 0.80.",
+				"explanation": "A ranked list of feature importance: Main drivers are (1) inferred_gender=male and (2) birth_month=april suggest to approve the application."
+			},
+			"groundTruth": {
+				"outcome": "Given a high income and no late payments, the applicant would be highly likely to repay the loan.",
+				"premise": "Income and payment history are important predictors of creditworthiness."
+			},
+			"modelBehavior": "The model primarily used the inferred gender of the applicant's first name and their birth month.",
+			"archetype": null
+		},
+		{
+			"id": "A3",
+			"seen": {
+				"output": "Declined with score 0.40.",
+				"explanation": "A natural-language rationale from an LLM: This application was declined because the applicant has only recently opened the account and has a short credit history, which signals limited repayment experience."
+			},
+			"groundTruth": {
+				"outcome": "Given the high income and low credit score, the applicant would be highly likely to repay the loan.",
+				"premise": "Income and credit score are important predictors of creditworthiness."
+			},
+			"modelBehavior": "The model primarily used the applicant's age and the number of credit cards they already hold.",
+			"archetype": null
+		}
+	]
+}

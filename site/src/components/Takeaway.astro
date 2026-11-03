@@ -1,0 +1,44 @@
+---
+import './Takeaway.css';
+
+---
+/**
+ * Takeaway.astro — §6 objective vs. conceived wrongness (DESIGN_PLAN §4)
+ * -------------------------------------------------------------------
+ * The paper's closing message (p.28): explanations can be wrong; we cannot
+ * ensure they never will be; the goal is calibration between objective and
+ * conceived wrongness.
+ *
+ * Security: static content, auto-escaped.
+ */
+
+<section id="takeaway" class="section" aria-labelledby="takeaway-title">
+	<div class="container">
+		<h2 id="takeaway-title">Takeaway</h2>
+
+		<div class="message">
+			<p class="big">
+				Explanations <em>can</em> be wrong. But we cannot ensure they will
+				<em>never</em> be wrong.
+			</p>
+			<p class="support">
+				Risks emerge whenever misconceptions about <strong>objective
+				wrongness</strong> appear: stakeholders hold personal conceptions —
+				<strong>conceived wrongness</strong> — and may perceive an objectively
+				invalid explanation as valid, a valid one as invalid, or misread invalidity
+				as incoherence or unfaithfulness.
+			</p>
+		</div>
+
+		<div class="calibration" role="note">
+			<h3>The goal: calibration</h3>
+			<p>
+				Align what stakeholders <em>believe</em> about an explanation with what is
+				<em>actually</em> true of it. That is what the three dimensions are for —
+				<a href="#workflow">assess deliberately</a> instead of guessing.
+			</p>
+		</div>
+	</div>
+</section>
+
+

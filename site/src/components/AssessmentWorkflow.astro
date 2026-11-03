@@ -1,0 +1,68 @@
+---
+import './AssessmentWorkflow.css';
+import workflow from '../data/workflow.json';
+import PipelineDiagram from './PipelineDiagram.astro';
+import type { WorkflowData } from '../schemas/schemas';
+
+
+const data = workflow as unknown as WorkflowData;
+
+const steps = data.steps;
+
+const intro = data.intro;
+
+const highlightFor = (step: Step) =>
+	(step.dimension as 'coherence' | 'validity' | 'faithfulness' | undefined) ?? 'none';
+---
+/**
+ * AssessmentWorkflow.astro — §4 the 4-step checklist (DESIGN_PLAN §4)
+ * ----------------------------------------------------------------
+ * Sticky compact PipelineDiagram on one side, the four assessment steps
+ * (0–3) scrolling on the other — the paper's reminder slide (p.12/p.20)
+ * turned into a walkthrough.
+ *
+ * Security: typed JSON data, auto-escaped.
+ */
+
+
+// Map each step to the diagram highlight (steps 1–3 carry a dimension field).
+
+<section id="workflow" class="section" aria-labelledby="workflow-title">
+	<div class="container">
+		<h2 id="workflow-title">Assessment Workflow</h2>
+		<p class="intro">{intro}</p>
+
+		<div class="workflow-grid">
+			<!-- Sticky diagram column -->
+			<div class="diagram-col" aria-hidden="true">
+				<div class="sticky">
+					<PipelineDiagram compact showLabels={false} id="workflow-diagram" />
+				</div>
+			</div>
+
+			<!-- Steps column -->
+			<ol class="steps" role="list">
+				{
+					steps.map((step) => (
+						<li class="step" data-dimension={step.dimension ?? 'context'}>
+							<div class="step-marker">
+								<span class="step-number">{step.number}</span>
+							</div>
+							<div class="step-body">
+								<h3>{step.title}</h3>
+								<p class="step-question">{step.question}</p>
+								<ul>
+									{step.details.map((detail) => (
+										<li>{detail}</li>
+									))}
+								</ul>
+							</div>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</div>
+</section>
+
+

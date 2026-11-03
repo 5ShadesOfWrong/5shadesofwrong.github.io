@@ -1,0 +1,178 @@
+/**
+ * base.css — Reset, typography, and global accessibility rules
+ * -------------------------------------------------------------
+ * Loaded by BaseLayout.astro after tokens.css.
+ * Principles (Implementation_plan §4):
+ *   - Content is readable without JS (no JS-hidden content here).
+ *   - Visible focus everywhere (keyboard navigation).
+ *   - prefers-reduced-motion honored for all transitions/animations.
+ */
+
+/* ---- Minimal reset ---- */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+html {
+	color-scheme: light; /* native widgets match the light "paper" theme */
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+body {
+	background-color: var(--color-bg);
+	/* Flat "printed page" background — no ambient glows (those were a dark-
+	   theme depth cue; --glow-* resolve to transparent now, see tokens.css). */
+	background-image: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-deep) 100%);
+	background-attachment: fixed;
+	color: var(--color-text);
+	font-family: var(--font-body);
+	font-size: var(--text-base);
+	line-height: var(--leading-normal);
+	-webkit-font-smoothing: antialiased;
+}
+
+/* ---- Typography ---- */
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-display);
+	line-height: var(--leading-tight);
+	text-wrap: balance; /* avoid orphaned heading words */
+	overflow-wrap: break-word;
+}
+
+h1 {
+	font-size: var(--text-4xl);
+}
+h2 {
+	font-size: var(--text-3xl);
+}
+h3 {
+	font-size: var(--text-2xl);
+}
+h4 {
+	font-size: var(--text-xl);
+}
+
+p {
+	max-width: var(--measure);
+}
+
+a {
+	color: var(--color-link);
+	text-decoration-thickness: from-font;
+	text-underline-offset: 0.2em;
+}
+
+a:hover {
+	text-decoration-thickness: 2px;
+}
+
+code,
+pre {
+	font-family: var(--font-mono);
+	font-size: 0.925em;
+}
+
+img,
+svg,
+video {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+/* ---- Accessibility: visible focus (never remove) ---- */
+:focus-visible {
+	outline: 3px solid var(--color-focus);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}
+
+/* ---- Accessibility: skip link (first tab stop) ---- */
+.skip-link {
+	position: absolute;
+	left: var(--space-4);
+	top: -100%; /* off-screen until focused */
+	z-index: 100;
+	padding: var(--space-2) var(--space-4);
+	background: var(--color-bg-overlay);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+	transition: top var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+	top: var(--space-4);
+}
+
+/* ---- Layout helpers ---- */
+.container {
+	width: 100%;
+	max-width: var(--content-width);
+	margin-inline: auto;
+	padding-inline: var(--space-6);
+}
+
+/* Reserve room for the fixed nav rail (desktop): without it, wide
+   children (diagram callouts, panel grids) slide under the page
+   markers on notebook screens (user bug report 2026-10-29). */
+@media (min-width: 769px) {
+	.container {
+		padding-right: calc(var(--space-6) + var(--navrail-width));
+	}
+}
+
+/* Section rhythm: generous but not wasteful — content breathes, space is used. */
+.section {
+	padding-block: var(--space-24);
+	position: relative;
+}
+
+/* Alternating surface tint: adjacent sections read as distinct "acts"
+   without hard dividers (user review: too much unused space felt flat). */
+.section:nth-of-type(even)::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgb(0 0 0 / 0.025);
+	pointer-events: none;
+}
+
+.section > .container {
+	position: relative; /* above the tint layer */
+}
+
+/* Screen-reader-only utility (for labels on icon buttons etc.) */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ---- Selection & scrollbar (small polish) ---- */
+::selection {
+	background: var(--color-model);
+	color: var(--color-bg);
+}

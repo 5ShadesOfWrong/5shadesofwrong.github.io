@@ -1,0 +1,39 @@
+---
+import './PresenterToggle.css';
+
+---
+/**
+ * PresenterToggle.astro — reader/presenter mode switch (DESIGN_PLAN §4)
+ * ------------------------------------------------------------------
+ * A small fixed control that toggles `data-presenter` on <html>.
+ * Presenter mode: larger type (tokens.css), click-to-reveal scenario cards
+ * (scenario.ts), projection-friendly spacing.
+ *
+ * The initial state is applied pre-paint by BaseLayout's inline bootstrap
+ * (no FOUC). This component only flips the attribute and persists it.
+ *
+ * Security: no dynamic content; state persisted as a bare string in
+ * localStorage under a fixed key.
+ */
+
+<button
+	type="button"
+	class="presenter-toggle"
+	data-presenter-toggle
+	aria-pressed="false"
+	title="Toggle presenter mode (projection-friendly, click-to-reveal cards)"
+>
+	<span class="icon" aria-hidden="true">
+		<!-- projector icon -->
+		<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+			<rect x="1.5" y="3" width="13" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+			<path d="M5 13.5h6M8 11v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+			<circle cx="8" cy="7" r="1.75" stroke="currentColor" stroke-width="1.5"/>
+		</svg>
+	</span>
+	<span class="label">Presenter mode</span>
+</button>
+
+
+<script src="../scripts/presenter.ts"></script>
+

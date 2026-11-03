@@ -1,0 +1,66 @@
+---
+import './DimensionCard.css';
+import type { Dimension } from '../schemas/schemas';
+
+/**
+ * DimensionCard.astro — one wrongness dimension (§2a–c)
+ * -------------------------------------------------
+ * Renders a single dimension from dimensions.json: definition, good vs. flawed
+ * example, and the paper's facets of failure as an expandable list.
+ *
+ * Props: dimension (typed by src/schemas/schemas.ts — single source of truth).
+ * Security: all strings auto-escaped; facets rendered as list items, no HTML.
+ */
+
+interface Props {
+	dimension: Dimension;
+}
+
+const { dimension } = Astro.props;
+
+---
+
+<article class="dimension-card" id={`dimension-${dimension.id}`} aria-labelledby={`dimension-${dimension.id}-title`}>
+	<header class="dimension-head">
+		<span class="dimension-number" aria-hidden="true">{dimension.number}</span>
+		<div>
+			<h3 id={`dimension-${dimension.id}-title`}>{dimension.name}</h3>
+			<p class="relationship">{dimension.relationship}</p>
+		</div>
+	</header>
+
+	<p class="definition">{dimension.definition}</p>
+
+	<div class="examples">
+		<div class="example example-good">
+			<h4>{dimension.exampleHeaders.good}</h4>
+			<p class="example-setup">{dimension.goodExample.setup}</p>
+			<blockquote>{dimension.goodExample.explanation}</blockquote>
+			<p class="example-why">{dimension.goodExample.why}</p>
+		</div>
+
+		<div class="example example-flawed">
+			<h4>{dimension.exampleHeaders.flawed}</h4>
+			<p class="example-setup">{dimension.flawedExample.setup}</p>
+			<blockquote>{dimension.flawedExample.explanation}</blockquote>
+			<p class="example-why">{dimension.flawedExample.why}</p>
+		</div>
+	</div>
+
+	<details class="facets">
+		<summary>
+			Facets of Wrongness
+			<span class="facet-count">({dimension.facets.length})</span>
+		</summary>
+		<ul>
+			{
+				dimension.facets.map((facet) => (
+					<li>
+						<strong>{facet.name}:</strong> {facet.example}
+					</li>
+				))
+			}
+		</ul>
+		<p class="footnote">{dimension.footnote}</p>
+	</details>
+</article>

@@ -1,0 +1,152 @@
+/**
+ * components.css — shared UI patterns used across components
+ * -----------------------------------------------------------
+ * Loaded by BaseLayout.astro (after base.css). Contains only patterns that
+ * repeat across sections; component-specific styles live in each .astro file.
+ *
+ * Contents:
+ *   1. Buttons/chips (shared control styles)
+ *   2. Reveal animation classes (paired with scripts/reveal.ts)
+ *   3. Details/summary shared polish
+ */
+
+/* ============================================================
+ * 1. Shared controls
+ * ============================================================ */
+
+/* Small pill chip (verdicts, tags) — used by ArchetypeGallery chips etc. */
+.chip {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-1);
+	padding: 2px 10px;
+	border-radius: 999px;
+	border: 1px solid var(--color-border);
+	font-size: var(--text-xs);
+	font-family: var(--font-mono);
+	color: var(--color-text-muted);
+}
+
+.chip--positive {
+	border-color: var(--color-positive);
+	color: var(--color-positive);
+}
+
+.chip--negative {
+	border-color: var(--color-negative);
+	color: var(--color-negative);
+}
+
+/* ============================================================
+ * 2. Reveal-on-scroll (progressive enhancement)
+ *    Paired with scripts/reveal.ts:
+ *      - .reveal-init is added by JS only → no-JS users never see hidden content
+ *      - .reveal-in transitions the element to visible
+ *      - prefers-reduced-motion: transitions are 0ms via tokens, so the
+ *        state change is instant (content never stays invisible)
+ * ============================================================ */
+
+.reveal-init {
+	opacity: 0;
+	transform: translateY(28px) scale(0.985);
+	transition:
+		opacity var(--duration-slow) var(--ease-out),
+		transform var(--duration-slow) var(--ease-out);
+	/* Safety: even if JS dies mid-flight, force visibility shortly after.
+	   (reveal.ts also has a JS-side timeout; this is the CSS backstop.) */
+	animation: reveal-failsafe 0s 4s forwards;
+}
+
+.reveal-init.reveal-in {
+	opacity: 1;
+	transform: none;
+}
+
+@keyframes reveal-failsafe {
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal-init {
+		opacity: 1;
+		transform: none;
+		animation: none;
+		transition: none;
+	}
+}
+
+/* ============================================================
+ * 3. Details/summary polish (used by DimensionCard facets, ScenarioCard blocks)
+ * ============================================================ */
+
+details > summary {
+	list-style: none; /* custom markers per component */
+}
+
+details > summary::-webkit-details-marker {
+	display: none;
+}
+
+details > summary:focus-visible {
+	outline: 3px solid var(--color-focus);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+ * 4. Term tooltip (Term.astro — concise definitions on hover)
+ *    CSS-only: appears on hover AND keyboard focus (tabindex=0).
+ *    Content comes from the data-term attribute (static, trusted).
+ * ============================================================ */
+
+.term {
+	position: relative;
+	/* No special cursor: the '?' help cursor felt intrusive while scrolling
+	   (user review 2026-10-26). The dotted underline already hints at the tip. */
+	cursor: default;
+	border-bottom: 1px dotted currentColor;
+}
+
+.term .term-tip {
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 50%;
+	transform: translateX(-50%) translateY(4px);
+	z-index: 80;
+	width: max-content;
+	max-width: 16rem;
+	padding: var(--space-2) var(--space-3);
+	background: var(--color-bg-overlay);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow-raised);
+	font-size: var(--text-xs);
+	font-family: var(--font-body);
+	font-weight: 400;
+	line-height: 1.45;
+	text-align: center;
+	white-space: normal;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity var(--duration-fast) var(--ease-out),
+		transform var(--duration-fast) var(--ease-out);
+}
+
+.term:hover .term-tip,
+.term:focus-visible .term-tip {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(-50%) translateY(0);
+}
+
+/* Small screens: tooltip centered above may clip — allow wrap */
+@media (max-width: 640px) {
+	.term .term-tip {
+		max-width: 13rem;
+	}
+}

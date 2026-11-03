@@ -1,0 +1,103 @@
+---
+/**
+ * BaseLayout.astro — global page shell
+ * ------------------------------------
+ * Owns everything that appears once per page:
+ *   <head>: charset, viewport, title/description, Open Graph/Twitter cards,
+ *           favicon, design tokens + base styles, Astro generator meta.
+ *   <body>: skip-link, global nav rail slot, page content slot, footer slot.
+ *
+ * Security (project constraint): all dynamic values are rendered through
+ * Astro expressions (auto-escaped). No set:html anywhere in this layout.
+ *
+ * Props are typed and validated — see Props interface below.
+ */
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+
+interface Props {
+	/** Page title — rendered as "<title> · Explanation Wrongness" */
+	title: string;
+	/** Meta description for SEO/social cards (keep ≤ 160 chars) */
+	description: string;
+	/** Absolute or root-relative URL of the social sharing image */
+	ogImage?: string;
+	/** Optional JSON-LD structured data object (serialized safely) */
+	structuredData?: Record<string, unknown>;
+}
+
+const { title, description, ogImage = '/og-image.png', structuredData } = Astro.props;
+
+// Site identity — single source of truth lives here until site.json exists (Phase 2).
+const SITE_NAME = '5 Shades of Wrong';
+const CANONICAL = new URL(Astro.url.pathname, Astro.site);
+
+// Presenter mode is applied pre-paint by an inline script (see <head>) to
+// avoid a flash of default styling for presenters. Storage access is wrapped
+// in try/catch: some browsers block localStorage (privacy settings).
+const presenterBootstrap = `
+try {
+  if (localStorage.getItem('shade-presenter') === 'true') {
+    document.documentElement.dataset.presenter = 'true';
+  }
+} catch (_) { /* storage unavailable — default mode */ }
+`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+
+		<title>{title} · {SITE_NAME}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={CANONICAL} />
+		<!-- import.meta.env.BASE_URL resolves to the configured `base` (astro.config.mjs)
+		     so assets keep working when GitHub Pages serves the site from a subpath.
+		     The trailing-slash normalization prevents '/shade-pagefavicon.svg'. -->
+		<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} />
+
+		<!-- Web fonts used by --font-display/--font-body/--font-mono (tokens.css).
+		     Previously these families were referenced but never loaded, silently
+		     falling back to system fonts everywhere. -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+		/>
+
+		<!-- Open Graph / Twitter cards (DESIGN_PLAN §8.1) -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={SITE_NAME} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={CANONICAL} />
+		<meta property="og:image" content={new URL(ogImage, Astro.site)} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
+
+		<!-- Apply presenter mode before first paint (no FOUC) -->
+		<script is:inline set:html={presenterBootstrap} />
+
+		{
+			structuredData && (
+				<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+			)
+		}
+	</head>
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<slot name="global-nav" />
+		<main id="main">
+			<slot />
+		</main>
+		<slot name="footer" />
+		<script src="../scripts/reveal.ts"></script>
+	</body>
+</html>
